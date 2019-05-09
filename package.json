@@ -1,0 +1,24 @@
+{
+  "name": "DLServer",
+  "version": "1.0.0",
+  "description": "This is a server made in a Raspberry Pi 3 using Express JS. It only works for a local network, with the raspi configured as a WAP. The server collects data from a Data Logger and stores it in a database.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arielrahmane/DLServer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arielrahmane/DLServer/issues"
+  },
+  "homepage": "https://github.com/arielrahmane/DLServer#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
