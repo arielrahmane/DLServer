@@ -4,7 +4,7 @@
   "description": "This is a server made in a Raspberry Pi 3 using Express JS. It only works for a local network, with the raspi configured as a WAP. The server collects data from a Data Logger and stores it in a database.",
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "./node_modules/nodemon/bin/nodemon.js src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,11 @@
   },
   "homepage": "https://github.com/arielrahmane/DLServer#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.0",
+    "sequelize": "^5.8.5"
   }
 }
