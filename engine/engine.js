@@ -1,10 +1,10 @@
 // Importación de paquetes necesarios
 const Gpio = require('pigpio').Gpio;
-const readline = require('readline');
 const fs = require("fs");
 
 //Engine Modules
 const sp = require('./modules/serialport');
+const rl = require('./modules/readline');
 
 // Definición de variables
 var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
@@ -16,12 +16,6 @@ var currentID = 0;
 var transmit = false;
 var waiting = false;
 var startedBody = false;
-
-// Crear interfaz de interacción con el cli
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
 function send(message)
 {
