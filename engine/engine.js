@@ -3,26 +3,30 @@ const sp = require('./modules/serialport');
 const rl = require('./modules/readline');
 const comMode = require('./modules/comMode');
 const fm = require('./modules/filesManage');
+const com = require('./modules/communication');
+const flag = require('./modules/flags');
+const nm = require('./modules/nodesManage');
 
 // Definición de variables
 var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
 var inMessage = "";                                 // Mensaje recibido
-var activeNodes = [];
-var initialStage = false;
-var currentID = 0;
+com.setStartedBody(false);
+//var activeNodes = [];
+//var initialStage = false;
+//var currentID = 0;
 var transmit = false;
 var waiting = false;
-var startedBody = false;
+//var startedBody = false;
 
-function send(message)
+/*function send(message)
 {
   separator();
   comMode.tx();
   message = message + '\n';
   setTimeout(write, 10, message);
-}
+}*/
 
-function read(data)
+/*function read(data)
 {
   var inChar = data.toString();
 
@@ -48,9 +52,9 @@ function read(data)
     inMessage = "";
     setStartedBody(false);
   }
-}
+}*/
 
-function write(message)
+/*function write(message)
 {
   console.log("sending: " + message);
   sp.write(message, error => {
@@ -66,9 +70,9 @@ function drain()
     console.log('drain callback returned. Error: ', error)
     comMode.rx();
   });
-}
+}*/
 
-function writeToFile(data)
+/*function writeToFile(data)
 {
   var nullData = false;
   while (data.includes("!"))
@@ -97,7 +101,7 @@ function writeToFile(data)
   if (!nullData)
   {
     data = data + "\n";
-    if (initialStage)
+    if (flag.getInitialStage())
     {
       fm.writeFile("activeNodes.txt", data, 'a');
     }
@@ -108,7 +112,7 @@ function writeToFile(data)
     }
 
   }
-}
+}*/
 
 function readFile()
 {
@@ -126,27 +130,27 @@ function separator()
 function readDHT(nodeID)
 {
   message = String(nodeID) + " dht";
-  send(message);
+  com.send(message);
 }
 
 function readMQ3(nodeID)
 {
   message = String(nodeID) + " mq3";
-  send(message);
+  com.send(message);
 }
 
 function readSensors()
 {
-  updateCurrentID(currentID);
-  readDHT(currentID);
-  setTimeout(readMQ3, 3000, currentID);
+  updateCurrentID(nm.getCurrentID());
+  readDHT(nm.getCurrentID());
+  setTimeout(readMQ3, 3000, nm.getCurrentID());
 }
 
 function updateCurrentID(oldID, first)
 {
-  var index = activeNodes.indexOf(oldID) + 1;
-  if (index >= activeNodes.length) index = 0;
-  currentID = activeNodes[index];
+  var index = nm.getActiveNodes().indexOf(oldID) + 1;
+  if (index >= nm.getActiveNodes().length) index = 0;
+  nm.setCurrentID(nm.getActiveNodes()[index]);
 }
 
 function resetCurrentID()
@@ -154,37 +158,38 @@ function resetCurrentID()
   currentID = activeNodes[0];
 }
 
-function addToActiveNodes(nodeResponse)
+/*function addToActiveNodes(nodeResponse)
 {
-  if (initialStage == true && nodeResponse.includes("ID" + currentID))
+  if (flag.getInitialStage() && nodeResponse.includes("ID" + currentID))
   {
     activeNodes.push(currentID);
   }
-}
+}*/
 
 function init()
 {
-  initialStage = true;
+  // initialStage = true;
+  flag.setInitialStage(true);
   var nodeID = 0;
   resetActiveNodesFile();
-  askNode = setInterval(getActiveNodes, 1000);
-  function getActiveNodes()
+  askNode = setInterval(gatherActiveNodes, 1000);
+  function gatherActiveNodes()
   {
-    currentID = nodeID;
-    console.log(nodeID)
-    send(nodeID)
+    nm.setCurrentID(nodeID);//currentID = nodeID;
+    console.log(nm.getCurrentID());//console.log(nodeID);
+    com.send(nodeID);//send(nodeID)
     nodeID++;
     if (nodeID > 15) 
     {
       clearInterval(askNode);
-      initialStage = false;
+      flag.setInitialStage(false);
       setInterval(readSensors, 6000);
-      resetCurrentID();
+      nm.setCurrentID(nm.getActiveNodes()[0]); //resetCurrentID();
     }
   }
 }
 
-function getDate()
+/*function getDate()
 {
   let now = new Date();
   var year = String(now.getFullYear());
@@ -195,7 +200,7 @@ function getDate()
   var seconds = String(now.getSeconds());
 
   return year + "/" + month + "/" + day + " " + hour + ":" + minutes + ":" + seconds + " ===> ";
-}
+}*/
 
 function resetActiveNodesFile()
 {
@@ -217,7 +222,7 @@ function getWaiting()
   return waiting;
 }
 
-function setStartedBody(val)
+/*function setStartedBody(val)
 {
   startedBody = val;
 }
@@ -225,7 +230,7 @@ function setStartedBody(val)
 function getStartedBody()
 {
   return startedBody;
-}
+}*/
 
 module.exports.engine = function() {
   init();
@@ -235,7 +240,8 @@ module.exports.engine = function() {
   {
     console.log('Port open');
     rl.question('Escribir mensaje: ', (answer) => {
-      send(answer);
+      //send(answer);
+      com.send(answer);
     });
 
     rl.on('line', (input) => {
@@ -246,14 +252,16 @@ module.exports.engine = function() {
           readFile();
           break;
         default:
-          send(input);
+          //send(input);
+          com.send(input);
       } 
     });
 
     // Cuando haya data disponible para leer
     sp.on('data', function(data) 
     {
-      read(data);
+      //read(data);
+      inMessage = com.read(data, inMessage);
     });
   });
 };
