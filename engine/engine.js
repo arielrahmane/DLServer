@@ -1,15 +1,14 @@
 // Importación de paquetes necesarios
-const Gpio = require('pigpio').Gpio;
 const fs = require("fs");
 
 //Engine Modules
 const sp = require('./modules/serialport');
 const rl = require('./modules/readline');
+const comMode = require('./modules/comMode');
 
 // Definición de variables
 var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
 var inMessage = "";                                 // Mensaje recibido
-const pinReDe = new Gpio(18, {mode: Gpio.OUTPUT});  // GPIO 18 como output para RE y DE
 var activeNodes = [];
 var initialStage = false;
 var currentID = 0;
@@ -20,7 +19,7 @@ var startedBody = false;
 function send(message)
 {
   separator();
-  modoTransmisor();
+  comMode.tx();
   message = message + '\n';
   setTimeout(write, 10, message);
 }
@@ -67,22 +66,8 @@ function drain()
 {
   sp.drain(error => {
     console.log('drain callback returned. Error: ', error)
-    modoReceptor();
+    comMode.rx();
   });
-}
-
-function modoReceptor() 
-{
-  console.log("Estableciendo en modo receptor");
-  pinReDe.digitalWrite(0);
-  transmit = false;
-}
-
-function modoTransmisor() 
-{
-  console.log("Estableciendo en modo transmisor");
-  pinReDe.digitalWrite(1);
-  transmit = true;
 }
 
 function writeToFile(data)
