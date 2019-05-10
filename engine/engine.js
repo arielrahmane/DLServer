@@ -1,13 +1,12 @@
 // Importación de paquetes necesarios
-const serialport = require("serialport");
 const Gpio = require('pigpio').Gpio;
 const readline = require('readline');
 const fs = require("fs");
-// const date = require('date-and-time');
+
+//Engine Modules
+const sp = require('./modules/serialport');
 
 // Definición de variables
-var port = '/dev/ttyS0';                            // Puerto por el que se establece la comunicación en la raspi
-var SerialPort = serialport.SerialPort;
 var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
 var inMessage = "";                                 // Mensaje recibido
 const pinReDe = new Gpio(18, {mode: Gpio.OUTPUT});  // GPIO 18 como output para RE y DE
@@ -17,15 +16,6 @@ var currentID = 0;
 var transmit = false;
 var waiting = false;
 var startedBody = false;
-
-// Configuración del puerto
-const sp = new serialport(port, {
-  baudRate: 9600,
-  dataBits: 8,
-  parity: 'none',
-  stopBits: 1,
-  flowControl: false
- });
 
 // Crear interfaz de interacción con el cli
 const rl = readline.createInterface({
