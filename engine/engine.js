@@ -1,10 +1,8 @@
-// Importación de paquetes necesarios
-const fs = require("fs");
-
 //Engine Modules
 const sp = require('./modules/serialport');
 const rl = require('./modules/readline');
 const comMode = require('./modules/comMode');
+const fm = require('./modules/filesManage');
 
 // Definición de variables
 var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
@@ -101,18 +99,12 @@ function writeToFile(data)
     data = data + "\n";
     if (initialStage)
     {
-      fs.writeFile("activeNodes.txt", data, {flag: 'a'}, function(err, data) {
-        if (err) console.log(err);
-        console.log("Successfully Written to File.");
-      });
+      fm.writeFile("activeNodes.txt", data, 'a');
     }
     else
     {
       data = getDate() + data;
-      fs.writeFile("node" + String(currentID) + ".txt", data, {flag: 'a'}, function(err, data) {
-        if (err) console.log(err);
-        console.log("Successfully Written to File.");
-      });
+      fm.writeFile("node" + String(currentID) + ".txt", data, 'a');
     }
 
   }
@@ -120,19 +112,10 @@ function writeToFile(data)
 
 function readFile()
 {
-  fs.readFile('temp.txt', 'utf8', (err, content) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        console.error('myfile does not exist');
-        return;
-      }
-
-      throw err;
-    }
-    separator();
-    console.log(content);
-    separator();
-  });
+  var content = fm.readFile('temp.txt');
+  separator();
+  console.log(content);
+  separator();
 }
 
 function separator()
@@ -216,9 +199,7 @@ function getDate()
 
 function resetActiveNodesFile()
 {
-  fs.writeFile("activeNodes.txt", "", {flag: 'w'}, function(err) {
-    if (err) console.log(err);
-  });
+  fm.writeFile("activeNodes.txt", "", 'w');
 }
 
 function getMode()
