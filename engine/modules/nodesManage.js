@@ -17,5 +17,10 @@ module.exports = {
 	},
 	getCurrentID: function() {
 		return curerntID;
+	},
+	updateCurrentID: function(oldID) {
+		var index = this.getActiveNodes().indexOf(oldID) + 1;
+		if (index >= this.getActiveNodes().length) index = 0;
+		this.setCurrentID(this.getActiveNodes()[index]);
 	}
 };

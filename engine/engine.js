@@ -39,7 +39,7 @@ function readMQ3(nodeID)
 
 function readSensors()
 {
-  updateCurrentID(nm.getCurrentID());
+  nm.updateCurrentID(nm.getCurrentID());
   readDHT(nm.getCurrentID());
   setTimeout(readMQ3, 3000, nm.getCurrentID());
 }
@@ -49,11 +49,6 @@ function updateCurrentID(oldID, first)
   var index = nm.getActiveNodes().indexOf(oldID) + 1;
   if (index >= nm.getActiveNodes().length) index = 0;
   nm.setCurrentID(nm.getActiveNodes()[index]);
-}
-
-function resetCurrentID()
-{
-  currentID = activeNodes[0];
 }
 
 function init()
