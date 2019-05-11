@@ -8,11 +8,9 @@ const flag = require('./modules/flags');
 const nm = require('./modules/nodesManage');
 
 // Definición de variables
-var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
+// var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
 var inMessage = "";                                 // Mensaje recibido
 com.setStartedBody(false);
-var transmit = false;
-var waiting = false;
 
 function readFile()
 {
@@ -29,13 +27,13 @@ function separator()
 
 function readDHT(nodeID)
 {
-  message = String(nodeID) + " dht";
+  var message = String(nodeID) + " dht";
   com.send(message);
 }
 
 function readMQ3(nodeID)
 {
-  message = String(nodeID) + " mq3";
+  var message = String(nodeID) + " mq3";
   com.send(message);
 }
 
@@ -88,16 +86,6 @@ function resetActiveNodesFile()
 function getMode()
 {
   return pinReDe.digitalRead()
-}
-
-function setWaiting(val)
-{
-  waiting = val;
-}
-
-function getWaiting()
-{
-  return waiting;
 }
 
 module.exports.engine = function() {
