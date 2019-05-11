@@ -6,6 +6,7 @@ const fm = require('./modules/filesManage');
 const com = require('./modules/communication');
 const flag = require('./modules/flags');
 const nm = require('./modules/nodesManage');
+const sr = require('./modules/sensRead');
 
 // Definición de variables
 // var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
@@ -25,32 +26,6 @@ function separator()
   console.log('=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::\n')
 }
 
-function readDHT(nodeID)
-{
-  var message = String(nodeID) + " dht";
-  com.send(message);
-}
-
-function readMQ3(nodeID)
-{
-  var message = String(nodeID) + " mq3";
-  com.send(message);
-}
-
-function readSensors()
-{
-  nm.updateCurrentID(nm.getCurrentID());
-  readDHT(nm.getCurrentID());
-  setTimeout(readMQ3, 3000, nm.getCurrentID());
-}
-
-function updateCurrentID(oldID, first)
-{
-  var index = nm.getActiveNodes().indexOf(oldID) + 1;
-  if (index >= nm.getActiveNodes().length) index = 0;
-  nm.setCurrentID(nm.getActiveNodes()[index]);
-}
-
 function init()
 {
   flag.setInitialStage(true);
@@ -67,7 +42,7 @@ function init()
     {
       clearInterval(askNode);
       flag.setInitialStage(false);
-      setInterval(readSensors, 6000);
+      setInterval(sr.readSensors, 6000);
       nm.setCurrentID(nm.getActiveNodes()[0]);
     }
   }
