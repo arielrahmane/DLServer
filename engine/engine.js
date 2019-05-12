@@ -6,22 +6,19 @@ const COM = require('./modules/communication');
 const FLAG = require('./modules/flags');
 const NM = require('./modules/nodesManage');
 const SR = require('./modules/sensRead');
+const MIXINS = require('./modules/mixins');
 
 // Definición de variables
 var inMessage = "";  // Mensaje recibido
 COM.setStartedBody(false);
 
-function readFile()
+// Erase this function
+function readFile() 
 {
   var content = FM.readFile('temp.txt');
-  separator();
+  MIXINS.separator();
   console.log(content);
-  separator();
-}
-
-function separator()
-{
-  console.log('=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::\n')
+  MIXINS.separator();
 }
 
 function init()

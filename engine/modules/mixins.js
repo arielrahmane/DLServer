@@ -9,5 +9,8 @@ module.exports = {
 		var seconds = String(now.getSeconds());
 
 		return year + "/" + month + "/" + day + " " + hour + ":" + minutes + ":" + seconds + " ===> ";
+	},
+	separator: function() {
+		console.log('=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::=::\n');
 	}
 };
