@@ -1,17 +1,17 @@
-const fs = require("fs");
-const flag = require('./flags');
-const mixins = require('./mixins');
-const nm = require('./nodesManage');
+const FS = require("fs");
+const FLAG = require('./flags');
+const MIXINS = require('./mixins');
+const NM = require('./nodesManage');
 
 module.exports = {
 	writeFile: function(name, data, _flag) {
-		fs.writeFile(name, data, {flag: _flag}, function(err, data) {
+		FS.writeFile(name, data, {flag: _flag}, function(err, data) {
         	if (err) console.log(err);
     		console.log("Successfully Written to File.");
       	});
 	},
 	readFile: function(fileName) {
-		fs.readFile(fileName, 'utf8', (err, content) => {
+		FS.readFile(fileName, 'utf8', (err, content) => {
 		    if (err) 
 		    {
 		      if (err.code === 'ENOENT') 
@@ -49,12 +49,12 @@ module.exports = {
 
 		if (!nullData) {
 			data = data + "\n";
-			if (flag.getInitialStage()) {
+			if (FLAG.getInitialStage()) {
 			  this.writeFile("activeNodes.txt", data, 'a');
 			}
 			else {
-			  data = mixins.getDate() + data;
-			  this.writeFile("node" + String(nm.getCurrentID()) + ".txt", data, 'a');
+			  data = MIXINS.getDate() + data;
+			  this.writeFile("node" + String(NM.getCurrentID()) + ".txt", data, 'a');
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 const serialport = require("serialport");
 const port = '/dev/ttyS0'; 
+
 const SerialPort = serialport.SerialPort;
 
 const sp = new serialport(port, {

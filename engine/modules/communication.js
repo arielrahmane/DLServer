@@ -1,14 +1,14 @@
-const comMode = require('./comMode');
-const sp = require('./serialport');
-const fm = require('./filesManage');
-const nm = require('./nodesManage');
+const COMMODE = require('./comMode');
+const SP = require('./serialport');
+const FM = require('./filesManage');
+const NM = require('./nodesManage');
 
 var startedBody = false;
 
 function write(message)
 {
   console.log("sending: " + message);
-  sp.write(message, error => {
+  SP.write(message, error => {
     console.log('write calback returned. Error: ', error);
   });
 
@@ -17,9 +17,9 @@ function write(message)
 
 function drain()
 {
-  sp.drain(error => {
+  SP.drain(error => {
     console.log('drain callback returned. Error: ', error)
-    comMode.rx();
+    COMMODE.rx();
   });
 }
 
@@ -36,7 +36,7 @@ function getStartedBody()
 module.exports = {
 	send: function(message) {
 		//separator();
-		comMode.tx();
+		COMMODE.tx();
 		message = message + '\n';
 		setTimeout(write, 10, message);
 	},
@@ -60,8 +60,8 @@ module.exports = {
 			if (message.length > 0)           // Si el mensaje no está vacío
 			{
 			  console.log('data received: ' + message);
-			  nm.addToActiveNodes(message);
-			  fm.writeToFile(message);
+			  NM.addToActiveNodes(message);
+			  FM.writeToFile(message);
 			}
 			message = "";
 			setStartedBody(false);

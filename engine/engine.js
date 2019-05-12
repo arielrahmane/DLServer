@@ -1,21 +1,19 @@
 //Engine Modules
-const sp = require('./modules/serialport');
-const rl = require('./modules/readline');
-const comMode = require('./modules/comMode');
-const fm = require('./modules/filesManage');
-const com = require('./modules/communication');
-const flag = require('./modules/flags');
-const nm = require('./modules/nodesManage');
-const sr = require('./modules/sensRead');
+const SP = require('./modules/serialport');
+const RL = require('./modules/readline');
+const FM = require('./modules/filesManage');
+const COM = require('./modules/communication');
+const FLAG = require('./modules/flags');
+const NM = require('./modules/nodesManage');
+const SR = require('./modules/sensRead');
 
 // Definición de variables
-// var message = 'Probando 1234\n';                        // El mensaje siempre debe terminar con \n para ser leído por el arduino
-var inMessage = "";                                 // Mensaje recibido
-com.setStartedBody(false);
+var inMessage = "";  // Mensaje recibido
+COM.setStartedBody(false);
 
 function readFile()
 {
-  var content = fm.readFile('temp.txt');
+  var content = FM.readFile('temp.txt');
   separator();
   console.log(content);
   separator();
@@ -28,29 +26,29 @@ function separator()
 
 function init()
 {
-  flag.setInitialStage(true);
+  FLAG.setInitialStage(true);
   var nodeID = 0;
   resetActiveNodesFile();
   askNode = setInterval(gatherActiveNodes, 1000);
   function gatherActiveNodes()
   {
-    nm.setCurrentID(nodeID);
-    console.log(nm.getCurrentID());
-    com.send(nodeID);
+    NM.setCurrentID(nodeID);
+    console.log(NM.getCurrentID());
+    COM.send(nodeID);
     nodeID++;
     if (nodeID > 15) 
     {
       clearInterval(askNode);
-      flag.setInitialStage(false);
-      setInterval(sr.readSensors, 6000);
-      nm.setCurrentID(nm.getActiveNodes()[0]);
+      FLAG.setInitialStage(false);
+      setInterval(SR.readSensors, 6000);
+      NM.setCurrentID(NM.getActiveNodes()[0]);
     }
   }
 }
 
 function resetActiveNodesFile()
 {
-  fm.writeFile("activeNodes.txt", "", 'w');
+  FM.writeFile("activeNodes.txt", "", 'w');
 }
 
 function getMode()
@@ -62,15 +60,14 @@ module.exports.engine = function() {
   init();
 
   // Cuando el puerto se encuentre abierto
-  sp.on('open', function() 
+  SP.on('open', function() 
   {
     console.log('Port open');
-    rl.question('Escribir mensaje: ', (answer) => {
-      //send(answer);
-      com.send(answer);
+    RL.question('Escribir mensaje: ', (answer) => {
+      COM.send(answer);
     });
 
-    rl.on('line', (input) => {
+    RL.on('line', (input) => {
 
       switch(input) 
       {
@@ -78,15 +75,14 @@ module.exports.engine = function() {
           readFile();
           break;
         default:
-          //send(input);
-          com.send(input);
+          COM.send(input);
       } 
     });
 
     // Cuando haya data disponible para leer
-    sp.on('data', function(data) 
+    SP.on('data', function(data) 
     {
-      inMessage = com.read(data, inMessage);
+      inMessage = COM.read(data, inMessage);
     });
   });
 };

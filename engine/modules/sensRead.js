@@ -1,22 +1,22 @@
-const nm = require('./nodesManage');
-const com = require('./communication');
+const NM = require('./nodesManage');
+const COM = require('./communication');
 
 function readDHT(nodeID)
 {
   var message = String(nodeID) + " dht";
-  com.send(message);
+  COM.send(message);
 }
 
 function readMQ3(nodeID)
 {
   var message = String(nodeID) + " mq3";
-  com.send(message);
+  COM.send(message);
 }
 
 module.exports = {
 	readSensors: function() {
-		nm.updateCurrentID(nm.getCurrentID());
-		readDHT(nm.getCurrentID());
-  		setTimeout(readMQ3, 3000, nm.getCurrentID());
+		NM.updateCurrentID(NM.getCurrentID());
+		readDHT(NM.getCurrentID());
+  		setTimeout(readMQ3, 3000, NM.getCurrentID());
 	}
 };

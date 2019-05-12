@@ -1,11 +1,11 @@
-const flag = require('./flags');
+const FLAG = require('./flags');
 
 let activeNodes = [];
 let currentID = 0;
 
 module.exports = {
 	addToActiveNodes: function(nodeResponse) {
-		if (flag.getInitialStage() && nodeResponse.includes("ID" + this.getCurrentID())) {
+		if (FLAG.getInitialStage() && nodeResponse.includes("ID" + this.getCurrentID())) {
 			activeNodes.push(this.getCurrentID());
 		}
 	},
