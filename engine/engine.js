@@ -28,7 +28,7 @@ function init()
 {
   FLAG.setInitialStage(true);
   var nodeID = 0;
-  resetActiveNodesFile();
+  FM.writeFile("activeNodes.txt", "", 'w');
   askNode = setInterval(gatherActiveNodes, 1000);
   function gatherActiveNodes()
   {
@@ -44,16 +44,6 @@ function init()
       NM.setCurrentID(NM.getActiveNodes()[0]);
     }
   }
-}
-
-function resetActiveNodesFile()
-{
-  FM.writeFile("activeNodes.txt", "", 'w');
-}
-
-function getMode()
-{
-  return pinReDe.digitalRead()
 }
 
 module.exports.engine = function() {
