@@ -1,5 +1,6 @@
 const FLAG = require('./flags');
 
+var numberOfNodes = 16;
 let activeNodes = [];
 let currentID = 0;
 
@@ -22,5 +23,8 @@ module.exports = {
 		var index = this.getActiveNodes().indexOf(oldID) + 1;
 		if (index >= this.getActiveNodes().length) index = 0;
 		this.setCurrentID(this.getActiveNodes()[index]);
+	},
+	getNumberOfNodes: function() {
+		return numberOfNodes;
 	}
 };

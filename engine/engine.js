@@ -33,7 +33,7 @@ function init()
     console.log(NM.getCurrentID());
     COM.send(nodeID);
     nodeID++;
-    if (nodeID > 15) 
+    if (nodeID > NM.getNumberOfNodes()-1) 
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
