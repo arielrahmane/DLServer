@@ -18,7 +18,7 @@ function updateNodeStatus(node, status) {
 	);
 }
 
-function addSensorData(nodeID, temp, humid, alcohol) {
+function addNodeData(nodeID, temp, humid, alcohol) {
 	DB.SensorsData.create ({
 		nodeID: nodeID,
 		temp: temp,
@@ -48,5 +48,6 @@ function deleteTable(tableName) {
 
 module.exports = {
 	createNodeStatus,
-	updateNodeStatus
+	updateNodeStatus,
+	addNodeData
 }
