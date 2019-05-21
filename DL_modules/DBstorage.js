@@ -2,7 +2,7 @@ const CONFIG = require('../engine/config');
 const DB = require('../src/database');
 
 function createNodeStatus() {
-	deleteTable();
+	deleteTable('NodeStatus');
 	for (var i = 0; i<CONFIG.numberOfNodes_; i++) {
 		DB.NodeStatus.create ({
 			nodeID: i,
@@ -18,11 +18,17 @@ function updateNodeStatus(node, status) {
 	);
 }
 
-function deleteTable() {
-	DB.NodeStatus.destroy({
-		where: {},
-		truncate: true
-	});
+function deleteTable(tableName) {
+	switch (tableName) {
+		case 'NodeStatus': 
+			DB.NodeStatus.destroy({
+				where: {},
+				truncate: true
+			});
+			break;
+		default:
+			console.log('Error: No existe la tabla que se quiere eliminar ', tableName);
+	}
 }
 module.exports = {
 	createNodeStatus,
