@@ -5,7 +5,7 @@ let currentID = 0;
 
 module.exports = {
 	addToActiveNodes: function(nodeResponse) {
-		if (FLAG.getInitialStage() && nodeResponse.includes("ID" + this.getCurrentID())) {
+		if (nodeResponse.includes("ID" + this.getCurrentID())) {
 			activeNodes.push(this.getCurrentID());
 		}
 	},

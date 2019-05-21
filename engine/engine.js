@@ -25,7 +25,7 @@ function init()
 {
   FLAG.setInitialStage(true);
   var nodeID = 0;
-  FM.writeFile("activeNodes.txt", "", 'w');
+  FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
   askNode = setInterval(gatherActiveNodes, 1000);
   function gatherActiveNodes()
   {

@@ -2,6 +2,7 @@ const COMMODE = require('./comMode');
 const SP = require('./serialport');
 const FM = require('./filesManage');
 const NM = require('./nodesManage');
+const FLAG = require('./flags');
 
 var startedBody = false;
 
@@ -60,7 +61,7 @@ module.exports = {
 			if (message.length > 0)           // Si el mensaje no está vacío
 			{
 			  console.log('data received: ' + message);
-			  NM.addToActiveNodes(message);
+			  if (FLAG.getInitialStage()) NM.addToActiveNodes(message);
 			  FM.writeToFile(message);
 			}
 			message = "";
