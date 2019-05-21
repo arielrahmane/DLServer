@@ -18,6 +18,15 @@ function updateNodeStatus(node, status) {
 	);
 }
 
+function addSensorData(nodeID, temp, humid, alcohol) {
+	DB.SensorsData.create ({
+		nodeID: nodeID,
+		temp: temp,
+		humid: humid,
+		alcohol: alcohol
+	});
+}
+
 function deleteTable(tableName) {
 	switch (tableName) {
 		case 'NodeStatus': 
@@ -26,10 +35,17 @@ function deleteTable(tableName) {
 				truncate: true
 			});
 			break;
+		case 'SensorsData': 
+			DB.SensorsData.destroy({
+				where: {},
+				truncate: true
+			});
+			break;
 		default:
 			console.log('Error: No existe la tabla que se quiere eliminar ', tableName);
 	}
 }
+
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus

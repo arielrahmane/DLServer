@@ -1,0 +1,16 @@
+module.exports = (sequelize, type) => {
+	return sequelize.define('sensorsData', {
+		id: {
+			type: type.INTEGER,
+			primaryKey: true,
+			autoIncrement: true
+		},
+		nodeID: type.INTEGER,
+		temp: type.FLOAT,
+		humid: type.FLOAT,
+		alcohol: type.FLOAT
+	}, {
+		freezeTableName: true,
+		tableName: 'sensorsData'
+	})
+};
