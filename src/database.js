@@ -21,4 +21,4 @@ sequelize.sync().then(() => {
   console.log(`Users db and user table have been created`);
 });
 
-module.exports = NodeStatus;
+module.exports.NodeStatus = NodeStatus;

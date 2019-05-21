@@ -1,6 +1,6 @@
 const FLAG = require('./flags');
+const DBstorage = require('../../DL_modules/DBstorage');
 
-var numberOfNodes = 16;
 let activeNodes = [];
 let currentID = 0;
 
@@ -8,6 +8,7 @@ module.exports = {
 	addToActiveNodes: function(nodeResponse) {
 		if (nodeResponse.includes("ID" + this.getCurrentID())) {
 			activeNodes.push(this.getCurrentID());
+			DBstorage.updateNodeStatus(this.getCurrentID(), true);
 		}
 	},
 	getActiveNodes: function() {
@@ -23,8 +24,5 @@ module.exports = {
 		var index = this.getActiveNodes().indexOf(oldID) + 1;
 		if (index >= this.getActiveNodes().length) index = 0;
 		this.setCurrentID(this.getActiveNodes()[index]);
-	},
-	getNumberOfNodes: function() {
-		return numberOfNodes;
 	}
 };
