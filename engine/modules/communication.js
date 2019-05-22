@@ -4,8 +4,6 @@ const FM = require('./filesManage');
 const NM = require('./nodesManage');
 const FLAG = require('./flags');
 
-// var startedBody = false;
-
 function write(message)
 {
   console.log("sending: " + message);
@@ -23,16 +21,6 @@ function drain()
     COMMODE.rx();
   });
 }
-
-/*function setStartedBody(val)
-{
-  startedBody = val;
-}
-
-function getStartedBody()
-{
-  return startedBody;
-}*/
 
 module.exports = {
 	send: function(message) {
@@ -69,6 +57,5 @@ module.exports = {
 		}
 
 		return message;
-	}/*,
-	setStartedBody*/
+	}
 };
