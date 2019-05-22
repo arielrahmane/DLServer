@@ -15,10 +15,10 @@ module.exports = {
 		return activeNodes;
 	},
 	setCurrentID: function(val) {
-		curerntID = val;
+		currentID = val;
 	},
 	getCurrentID: function() {
-		return curerntID;
+		return currentID;
 	},
 	updateCurrentID: function(oldID) {
 		var index = this.getActiveNodes().indexOf(oldID) + 1;
