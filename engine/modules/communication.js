@@ -4,6 +4,7 @@ const FM = require('./filesManage');
 const NM = require('./nodesManage');
 const FLAG = require('./flags');
 const SM = require('./stringManage');
+const DBstorage = require('../../DL_modules/DBstorage');
 
 function write(message)
 {
@@ -53,6 +54,13 @@ module.exports = {
 			  console.log('data received: ' + message);
 			  if (FLAG.getInitialStage()) NM.addToActiveNodes(message);
 			  FM.writeToFile(message);
+			  /* En este bloque entra dos veces por nodo. Debo almacenar en la DB al finalizar el pedido en el nodo.
+			  var temp = SM.getTemp(message);
+			  var humid = SM.getHumid(message);
+			  var alcohol = SM.getAlcohol(message);
+			  var id = NM.getCurrentID();
+			  DBstorage.addNodeData(id, temp, humid, alcohol);
+			  */
 			}
 			message = "";
 			FLAG.setStartedBody(false);
