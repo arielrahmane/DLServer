@@ -3,6 +3,7 @@ const SP = require('./serialport');
 const FM = require('./filesManage');
 const NM = require('./nodesManage');
 const FLAG = require('./flags');
+const SM = require('./stringManage');
 
 function write(message)
 {
@@ -32,6 +33,7 @@ module.exports = {
 	read: function(data, inMessage) {
 		var inChar = data.toString();
 		var message = inMessage;
+		//console.log(inChar);
 
 		if (!inChar.startsWith("!"))
 		{
