@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-	return sequelize.define('sensorsData', {
+	return sequelize.define('nodesData', {
 		id: {
 			type: type.INTEGER,
 			primaryKey: true,
@@ -11,6 +11,6 @@ module.exports = (sequelize, type) => {
 		alcohol: type.FLOAT
 	}, {
 		freezeTableName: true,
-		tableName: 'sensorsData'
+		tableName: 'nodesData'
 	})
 };

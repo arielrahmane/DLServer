@@ -35,8 +35,8 @@ function deleteTable(tableName) {
 				truncate: true
 			});
 			break;
-		case 'SensorsData': 
-			DB.SensorsData.destroy({
+		case 'NodesData': 
+			DB.NodesData.destroy({
 				where: {},
 				truncate: true
 			});
