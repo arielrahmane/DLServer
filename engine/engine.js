@@ -12,7 +12,7 @@ const CONFIG = require('./config');
 
 // Definición de variables
 var inMessage = "";  // Mensaje recibido
-COM.setStartedBody(false);
+FLAG.setStartedBody(false);
 
 // Erase this function
 function readFile() 

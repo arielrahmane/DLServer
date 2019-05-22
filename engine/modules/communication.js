@@ -4,7 +4,7 @@ const FM = require('./filesManage');
 const NM = require('./nodesManage');
 const FLAG = require('./flags');
 
-var startedBody = false;
+// var startedBody = false;
 
 function write(message)
 {
@@ -24,7 +24,7 @@ function drain()
   });
 }
 
-function setStartedBody(val)
+/*function setStartedBody(val)
 {
   startedBody = val;
 }
@@ -32,7 +32,7 @@ function setStartedBody(val)
 function getStartedBody()
 {
   return startedBody;
-}
+}*/
 
 module.exports = {
 	send: function(message) {
@@ -47,9 +47,9 @@ module.exports = {
 
 		if (!inChar.startsWith("!"))
 		{
-			if (!getStartedBody()) return;
+			if (!FLAG.getStartedBody()) return;
 		}
-		else setStartedBody(true);
+		else FLAG.setStartedBody(true);
 
 		if (inChar != "?")  //If received message did not finish
 		{ 
@@ -65,10 +65,10 @@ module.exports = {
 			  FM.writeToFile(message);
 			}
 			message = "";
-			setStartedBody(false);
+			FLAG.setStartedBody(false);
 		}
 
 		return message;
-	},
-	setStartedBody
+	}/*,
+	setStartedBody*/
 };
