@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const nodeStatusModel = require('../models/nodeStatus');
+const nodesDataModel = require('../models/nodesData');
 
 const sequelize = new Sequelize('dlserverDB', 'root', 'ariel', {
   host: 'localhost',
@@ -16,9 +17,11 @@ sequelize
   });
 
 const NodeStatus = nodeStatusModel(sequelize, Sequelize);
+const NodesData = nodesDataModel(sequelize, Sequelize);
 
 sequelize.sync().then(() => {
   console.log(`Users db and user table have been created`);
 });
 
-module.exports = NodeStatus;
+module.exports.NodeStatus = NodeStatus;
+module.exports.NodesData = NodesData;

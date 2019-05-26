@@ -7,10 +7,12 @@ const FLAG = require('./modules/flags');
 const NM = require('./modules/nodesManage');
 const SR = require('./modules/sensRead');
 const MIXINS = require('./modules/mixins');
+const DBstorage = require('../DL_modules/DBstorage');
+const CONFIG = require('./config');
 
 // Definición de variables
 var inMessage = "";  // Mensaje recibido
-COM.setStartedBody(false);
+FLAG.setStartedBody(false);
 
 // Erase this function
 function readFile() 
@@ -25,7 +27,8 @@ function init()
 {
   FLAG.setInitialStage(true);
   var nodeID = 0;
-  FM.writeFile("activeNodes.txt", "", 'w');
+  FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
+  DBstorage.createNodeStatus();
   askNode = setInterval(gatherActiveNodes, 1000);
   function gatherActiveNodes()
   {
@@ -33,7 +36,7 @@ function init()
     console.log(NM.getCurrentID());
     COM.send(nodeID);
     nodeID++;
-    if (nodeID > 15) 
+    if (nodeID > CONFIG.numberOfNodes_-1) 
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
