@@ -1,5 +1,6 @@
 const NM = require('./nodesManage');
 const COM = require('./communication');
+const FLAG = require('./flags');
 
 function readDHT(nodeID)
 {

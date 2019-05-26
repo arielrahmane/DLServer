@@ -3,6 +3,35 @@ const DBstorage = require('../../DL_modules/DBstorage');
 
 let activeNodes = [];
 let currentID = 0;
+let currentNodeData = {
+	nodeID: 0,
+	temp: 0.0,
+	humid: 0.0,
+	alcohol: 0
+};
+
+function setCurrentNodeData(param, value) {
+	switch (param) {
+		case "nodeID":
+			currentNodeData.nodeID = value;
+			break;
+		case "temp":
+			currentNodeData.temp = value;
+			break;
+		case "humid":
+			currentNodeData.humid = value;
+			break;
+		case "alcohol":
+			currentNodeData.alcohol = value;
+			break;
+		default:
+			console.log("Error: there is no parameter in currentNodeData.");
+	}
+}
+
+function getCurrentNodeData() {
+	return currentNodeData;
+}
 
 module.exports = {
 	addToActiveNodes: function(nodeResponse) {
@@ -24,5 +53,7 @@ module.exports = {
 		var index = this.getActiveNodes().indexOf(oldID) + 1;
 		if (index >= this.getActiveNodes().length) index = 0;
 		this.setCurrentID(this.getActiveNodes()[index]);
-	}
+	},
+	setCurrentNodeData,
+	getCurrentNodeData
 };

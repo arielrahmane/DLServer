@@ -18,12 +18,12 @@ function updateNodeStatus(node, status) {
 	);
 }
 
-function addNodeData(nodeID, temp, humid, alcohol) {
-	DB.SensorsData.create ({
-		nodeID: nodeID,
-		temp: temp,
-		humid: humid,
-		alcohol: alcohol
+function addNodeData(nodeData) {
+	DB.NodesData.create ({
+		nodeID: nodeData.nodeID,
+		temp: nodeData.temp,
+		humid: nodeData.humid,
+		alcohol: nodeData.alcohol
 	});
 }
 

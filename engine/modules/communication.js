@@ -52,15 +52,24 @@ module.exports = {
 			if (message.length > 0)           // Si el mensaje no está vacío
 			{
 			  console.log('data received: ' + message);
-			  if (FLAG.getInitialStage()) NM.addToActiveNodes(message);
-			  FM.writeToFile(message);
-			  /* En este bloque entra dos veces por nodo. Debo almacenar en la DB al finalizar el pedido en el nodo.
-			  var temp = SM.getTemp(message);
-			  var humid = SM.getHumid(message);
-			  var alcohol = SM.getAlcohol(message);
-			  var id = NM.getCurrentID();
-			  DBstorage.addNodeData(id, temp, humid, alcohol);
-			  */
+			  if (FLAG.getInitialStage()) {
+			  	NM.addToActiveNodes(message);
+			  }
+			  else if (message.includes("TEMP")) {
+			  	var nodeID = NM.getCurrentID();
+			  	var temp = SM.getTemp(message);
+			  	var humid = SM.getHumid(message);
+			  	NM.setCurrentNodeData("nodeID", nodeID);
+			  	NM.setCurrentNodeData("temp", temp);
+			  	NM.setCurrentNodeData("humid", humid);
+			  }
+			  else if (message.includes("VOLT")) {
+			  	// It enters this block if the MQ3 sensor data is the input message. This means that the complete node has been read.
+			  	var alcohol = SM.getAlcohol(message);
+			  	NM.setCurrentNodeData("alcohol", alcohol);
+			  	var nodeData = NM.getCurrentNodeData();
+			  	DBstorage.addNodeData(nodeData);
+			  };
 			}
 			message = "";
 			FLAG.setStartedBody(false);
