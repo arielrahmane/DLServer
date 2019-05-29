@@ -1,22 +1,11 @@
-const NodeStatus = require('../src/database');
+var data = {
+	title: "Welcome to ArielDL",
+	description: "This is a test for the HTTP requests"
+};
 
 module.exports = app => {
 	app.get('/', (req, res) => {
-	  var data = {
-	  	nodeID: 7,
-      	active: false
-	  };
-
-	  NodeStatus.create(data)
-	      .then(() => {
-	        res.send({
-	          success: true,
-	          message: 'Node saved successfully!'
-	        });
-	      })
-	      .catch(err => {
-	        console.log("Problem saving Node");
-	        res.status(500).json(err);
-	      });
+	  res.send(data);
+	  console.log("Entered to Home Page");
 	})
 };
