@@ -5,11 +5,11 @@ const {NodeStatus} = require("../../src/database");
 function find(res) {
 	NodeStatus.findAll({
 		where: {
-			active: true
+			
 		}
 	})
-	.then(actives => {
-		res.send(JSON.stringify(actives));
+	.then(nodes => {
+		res.send(JSON.stringify(nodes));
 	})
 	.catch(err => {
 		res.send(err);

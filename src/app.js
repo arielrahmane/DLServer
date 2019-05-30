@@ -15,6 +15,7 @@ app.use(cors())
 require('../routes/getSens')(app);
 require('../routes/homePage')(app);
 require('../routes/nodes/status')(app);
+require('../routes/nodes/node/data')(app);
 
 //Engine
 const Engine = require('../engine/engine');
