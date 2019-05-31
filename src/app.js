@@ -19,11 +19,11 @@ require('../routes/nodes/node/data')(app);
 
 //Engine
 const Engine = require('../engine/engine');
-// import {engine, startNodesScan, startSensorsRead} from '../engine/engine';
 
 Engine.engine();
-Engine.startNodesScan(Engine.startSensorsRead);
+//Engine.startNodesScan(Engine.startSensorsRead);
 
+//Port config
 app.listen(process.env.PORT || 8081, "192.168.0.18")
 
 module.exports = app;
