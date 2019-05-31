@@ -46,8 +46,34 @@ function init()
   }
 }
 
+module.exports.startNodesScan = function(callback) {
+  FLAG.setInitialStage(true);
+  var nodeID = 0;
+  FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
+  DBstorage.createNodeStatus();
+  askNode = setInterval(gatherActiveNodes, 1000);
+  function gatherActiveNodes()
+  {
+    NM.setCurrentID(nodeID);
+    console.log(NM.getCurrentID());
+    COM.send(nodeID);
+    nodeID++;
+    if (nodeID > CONFIG.numberOfNodes_-1) 
+    {
+      clearInterval(askNode);
+      FLAG.setInitialStage(false);
+      NM.setCurrentID(NM.getActiveNodes()[0]);
+      callback();
+    }
+  }
+}
+
+module.exports.startSensorsRead = function() {
+  setInterval(SR.readSensors, 6000);
+}
+
 module.exports.engine = function() {
-  init();
+  //init();
 
   // Cuando el puerto se encuentre abierto
   SP.on('open', function() 
