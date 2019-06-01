@@ -68,8 +68,16 @@ module.exports.startNodesScan = function(callback) {
   }
 }
 
+let sensorsReadInterval;
+
 module.exports.startSensorsRead = function() {
-  setInterval(SR.readSensors, 6000);
+  console.log("SENSORS READ STARTED!!!");
+  sensorsReadInterval = setInterval(SR.readSensors, 6000);
+}
+
+module.exports.stopSensorsRead = function () {
+  console.log("SENSORS READ STOPED!!!");
+  clearInterval(sensorsReadInterval);
 }
 
 module.exports.engine = function() {

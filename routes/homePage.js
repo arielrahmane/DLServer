@@ -18,6 +18,10 @@ module.exports = app => {
 				Engine.startSensorsRead();
 				res.sendStatus(200);
 				break;
+			case 4:
+				Engine.stopSensorsRead();
+				res.sendStatus(200);
+				break;
 			default:
 				res.status(400).send({message: "Error: There is not such option."});
 		}
