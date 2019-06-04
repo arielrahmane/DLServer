@@ -14,6 +14,7 @@ app.use(cors())
 //Routes
 require('../routes/getSens')(app);
 require('../routes/homePage')(app);
+require('../routes/device')(app);
 require('../routes/nodes/status')(app);
 require('../routes/nodes/node/data')(app);
 
