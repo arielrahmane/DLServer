@@ -1,0 +1,1 @@
+// This is the route for configuration of the device
