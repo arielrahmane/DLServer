@@ -18,6 +18,6 @@ module.exports = {
 	readSensors: function() {
 		NM.updateCurrentID(NM.getCurrentID());
 		readDHT(NM.getCurrentID());
-  		setTimeout(readMQ3, 3000, NM.getCurrentID());
+  		setTimeout(readMQ3, 5000, NM.getCurrentID());
 	}
 };
