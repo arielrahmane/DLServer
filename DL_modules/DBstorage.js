@@ -21,8 +21,12 @@ function updateNodeStatus(node, status) {
 function addNodeData(nodeData) {
 	DB.NodesData.create ({
 		nodeID: nodeData.nodeID,
-		temp: nodeData.temp,
-		humid: nodeData.humid,
+		tempA: nodeData.tempA,
+		tempB: nodeData.tempB,
+		tempC: nodeData.tempC,
+		humidA: nodeData.humidA,
+		humidB: nodeData.humidB,
+		humidC: nodeData.humidC,
 		alcohol: nodeData.alcohol
 	});
 }
