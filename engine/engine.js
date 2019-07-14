@@ -40,7 +40,7 @@ function init()
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
-      setInterval(SR.readSensors, 6000);
+      setInterval(SR.readSensors, 10000);
       NM.setCurrentID(NM.getActiveNodes()[0]);
     }
   }
