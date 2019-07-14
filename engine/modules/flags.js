@@ -1,17 +1,24 @@
-let initialStage = false;
-let startedBody = false;
+let initialStage_ = false;
+let startedBody_ = false;
+let deviceRunning_ = false;
 
 module.exports = {
 	setInitialStage: function(val) {
-		initialStage = val;
+		initialStage_ = val;
 	},
 	getInitialStage: function() {
-		return initialStage;
+		return initialStage_;
 	},
 	setStartedBody: function(val) {
-		startedBody = val;
+		startedBody_ = val;
 	},
 	getStartedBody: function() {
-		return startedBody;
+		return startedBody_;
+	},
+	setDeviceRunning: function(val) {
+		deviceRunning_ = val;
+	},
+	getDeviceRunning: function() {
+		return deviceRunning_;
 	}
 };

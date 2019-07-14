@@ -40,7 +40,7 @@ function init()
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
-      setInterval(SR.readSensors, 6000);
+      setInterval(SR.readSensors, 10000);
       NM.setCurrentID(NM.getActiveNodes()[0]);
     }
   }
@@ -72,11 +72,13 @@ let sensorsReadInterval;
 
 module.exports.startSensorsRead = function() {
   console.log("SENSORS READ STARTED!!!");
+  FLAG.setDeviceRunning(true);
   sensorsReadInterval = setInterval(SR.readSensors, 6000);
 }
 
 module.exports.stopSensorsRead = function () {
   console.log("SENSORS READ STOPED!!!");
+  FLAG.setDeviceRunning(false);
   clearInterval(sensorsReadInterval);
 }
 

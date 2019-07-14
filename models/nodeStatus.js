@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-	return sequelize.define('nodeStatus', {
+	return sequelize.define('NodeStatus', {
 		id: {
 			type: type.INTEGER,
 			primaryKey: true,
@@ -9,6 +9,6 @@ module.exports = (sequelize, type) => {
 		active: type.BOOLEAN
 	}, {
 		freezeTableName: true,
-		tableName: 'nodeStatus'
+		tableName: 'NodeStatus'
 	})
 };

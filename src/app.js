@@ -14,8 +14,10 @@ app.use(cors())
 //Routes
 require('../routes/getSens')(app);
 require('../routes/homePage')(app);
+require('../routes/device')(app);
 require('../routes/nodes/status')(app);
 require('../routes/nodes/node/data')(app);
+require('../routes/nodes/node/dataHistory')(app);
 
 //Engine
 const Engine = require('../engine/engine');
@@ -24,6 +26,6 @@ Engine.engine();
 //Engine.startNodesScan(Engine.startSensorsRead);
 
 //Port config
-app.listen(process.env.PORT || 8081, "192.168.0.18")
+app.listen(process.env.PORT || 8081, "192.168.0.15")
 
 module.exports = app;

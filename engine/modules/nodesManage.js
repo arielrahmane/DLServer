@@ -5,8 +5,12 @@ let activeNodes = [];
 let currentID = 0;
 let currentNodeData = {
 	nodeID: 0,
-	temp: 0.0,
-	humid: 0.0,
+	tempA: 0.0,
+	tempB: 0.0,
+	tempC: 0.0,
+	humidA: 0.0,
+	humidB: 0.0,
+	humidC: 0.0,
 	alcohol: 0
 };
 
@@ -15,11 +19,13 @@ function setCurrentNodeData(param, value) {
 		case "nodeID":
 			currentNodeData.nodeID = value;
 			break;
-		case "temp":
-			currentNodeData.temp = value;
-			break;
-		case "humid":
-			currentNodeData.humid = value;
+		case "dht":
+			currentNodeData.tempA = value.tempA;
+			currentNodeData.tempB = value.tempB;
+			currentNodeData.tempC = value.tempC;
+			currentNodeData.humidA = value.humidA;
+			currentNodeData.humidB = value.humidB;
+			currentNodeData.humidC = value.humidC;
 			break;
 		case "alcohol":
 			currentNodeData.alcohol = value;
