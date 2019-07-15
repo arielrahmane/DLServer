@@ -2,8 +2,9 @@
 
 const {NodesData} = require("../../../src/database");
 
-function findNodeHistory(node, res) {
+function findNodeHistory(node, field, res) {
 	NodesData.findAll({
+		attributes: [field, 'createdAt'],
 		where: {
 			nodeID: node
 		},
@@ -19,8 +20,9 @@ function findNodeHistory(node, res) {
 }
 
 module.exports = app => {
-	app.get('/nodes/:node/history/:variable', (req, res) => {
+	app.get('/nodes/:node/history/:field', (req, res) => {
 		var node = req.params.node;
-		findNodeHistory(node, res);
+		var field = (req.params.field).toString();
+		findNodeHistory(node, field, res);
 	});
 };
