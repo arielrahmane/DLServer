@@ -18,6 +18,12 @@ function updateNodeStatus(node, status) {
 	);
 }
 
+function updateSettings(settings) {
+	if (settings.deviceConfigured) DB.Settings.update({deviceConfigured: settings.deviceConfigured});
+	if (settings.amountOfNodes) DB.Settings.update({amountOfNodes: settings.amountOfNodes});
+	if (settings.sensorSamplingFreq) DB.Settings.update({sensorSamplingFreq: settings.sensorSamplingFreq});
+}
+
 function addNodeData(nodeData) {
 	DB.NodesData.create ({
 		nodeID: nodeData.nodeID,
@@ -53,5 +59,6 @@ function deleteTable(tableName) {
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
-	addNodeData
+	addNodeData,
+	updateSettings
 }
