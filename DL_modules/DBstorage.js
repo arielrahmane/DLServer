@@ -27,12 +27,21 @@ function createSettingsOnce() {
 	});
 }
 
-function updateSettings(setting, value) {
-	if (setting) {
-		DB.Settings.update({[setting]: value}, {where: {id: 1}}).then(() => {
-			if (setting == 'amountOfNodes') DB.Settings.update({deviceConfigured: true}, {where: {id: 1}});
-		});
-	}
+function updateSettings(values) {
+	return new Promise(function(resolve, reject) {
+		if (values.amountOfNodes && values.sensorSamplingFreq) {
+			DB.Settings.update({amountOfNodes: values.amountOfNodes, sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
+			.then(result => {
+				resolve(result);
+			})
+			.catch(error => {
+				reject(error);
+			});
+		}
+		else {
+			reject('Entrada inválida')
+		}
+	});
 }
 
 function getSettings() {

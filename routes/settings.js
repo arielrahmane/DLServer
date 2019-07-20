@@ -15,9 +15,11 @@ module.exports = app => {
 		});
 	});
 
-	app.put('/settings/:setting', (req, res) => {
+	app.put('/settings', (req, res) => {
 		var setting = req.params.setting;
-		var value = req.body.value;
-		DBstorage.updateSettings(setting, value);
+		var values = req.body;
+		DBstorage.updateSettings(values)
+		.then(result => {res.status(200).send(result); console.log(result);})
+		.catch(error => {res.status(400).send(error)})
 	});
 };
