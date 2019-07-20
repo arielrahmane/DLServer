@@ -29,17 +29,23 @@ function createSettingsOnce() {
 
 function updateSettings(values) {
 	return new Promise(function(resolve, reject) {
-		if (values.amountOfNodes && values.sensorSamplingFreq) {
+		if (values.amountOfNodes > 0
+			&& values.sensorSamplingFreq > 0
+			&& typeof(values.amountOfNodes) === 'number'
+			&& typeof(values.sensorSamplingFreq) === 'number') {
 			DB.Settings.update({amountOfNodes: values.amountOfNodes, sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
 			.then(result => {
-				resolve(result);
+				var response = {response: result, message: 'Configuración actualizada.'};
+				resolve(response);
 			})
 			.catch(error => {
-				reject(error);
+				var response = {response: error, message: 'Error de actualización'};
+				reject(response);
 			});
 		}
 		else {
-			reject('Entrada inválida')
+			var response = {response: 'Entrada inválida', message: 'Entrada inválida'};
+			reject(response);
 		}
 	});
 }

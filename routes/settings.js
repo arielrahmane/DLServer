@@ -19,7 +19,7 @@ module.exports = app => {
 		var setting = req.params.setting;
 		var values = req.body;
 		DBstorage.updateSettings(values)
-		.then(result => {res.status(200).send(result); console.log(result);})
-		.catch(error => {res.status(400).send(error)})
+		.then(result => {res.status(200).send(result.message);})
+		.catch(error => {res.status(400).send(error)});
 	});
 };

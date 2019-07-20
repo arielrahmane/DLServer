@@ -27,6 +27,6 @@ Engine.engine();
 //Engine.startNodesScan(Engine.startSensorsRead);
 
 //Port config
-app.listen(process.env.PORT || 8081, "192.168.0.7")
+app.listen(process.env.PORT || 8081) //, "192.168.0.7")
 
 module.exports = app;
