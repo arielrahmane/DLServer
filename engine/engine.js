@@ -85,6 +85,10 @@ module.exports.stopSensorsRead = function () {
 module.exports.engine = function() {
   //init();
 
+  //Create Settings' table unique row only for the first time
+  //DBstorage.getSettings();
+
+
   // Cuando el puerto se encuentre abierto
   SP.on('open', function() 
   {

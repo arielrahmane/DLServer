@@ -18,10 +18,29 @@ function updateNodeStatus(node, status) {
 	);
 }
 
-function updateSettings(settings) {
-	if (settings.deviceConfigured) DB.Settings.update({deviceConfigured: settings.deviceConfigured});
-	if (settings.amountOfNodes) DB.Settings.update({amountOfNodes: settings.amountOfNodes});
-	if (settings.sensorSamplingFreq) DB.Settings.update({sensorSamplingFreq: settings.sensorSamplingFreq});
+function createSettingsOnce() {
+	console.log('CREATING SETTINGS ROW!');
+	DB.Settings.create({
+		deviceConfigured: false,
+		amountOfNodes: 0,
+		sensorSamplingFreq: 0.0
+	});
+}
+
+function updateSettings(setting, value) {
+	if (setting) {
+		DB.Settings.update({[setting]: value}, {where: {id: 1}}).then(() => {
+			if (setting == 'amountOfNodes') DB.Settings.update({deviceConfigured: true}, {where: {id: 1}});
+		});
+	}
+}
+
+function getSettings() {
+	return new Promise(function(resolve, reject){
+		DB.Settings.findOne({ where: {id: 1} }).then(settings => {
+			resolve(settings.dataValues);
+		});
+	});
 }
 
 function addNodeData(nodeData) {
@@ -51,14 +70,54 @@ function deleteTable(tableName) {
 				truncate: true
 			});
 			break;
+		case 'Settings': 
+			DB.Settings.destroy({
+				where: {},
+				truncate: true
+			});
+			break;
 		default:
 			console.log('Error: No existe la tabla que se quiere eliminar ', tableName);
 	}
+}
+
+function getTableCount(tableName) {
+	var tableCount = -1;
+	return new Promise(function(resolve, reject){
+		switch (tableName) {
+			case 'NodeStatus':
+				DB.NodeStatus.count().then(count => {
+				  console.log("There are " + count + " NodeStatus!");
+				  resolve(count);
+				});
+				break;
+			case 'NodesData': 
+				DB.NodesData.count().then(count => {
+				  console.log("There are " + count + " NodesData!");
+				  resolve(count);
+				});
+				break;
+			case 'Settings': 
+				DB.Settings.count().then(count => {
+				  tableCount = count;
+				  console.log("There are " + tableCount + " Settings!");
+				  resolve(count);
+				});
+				break;
+			default:
+				console.log('Error: Table does not exist', tableName);
+				reject('The table does not exist');
+		}
+	});
+	
 }
 
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
 	addNodeData,
-	updateSettings
+	updateSettings,
+	createSettingsOnce,
+	getTableCount,
+	getSettings
 }
