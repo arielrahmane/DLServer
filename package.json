@@ -20,6 +20,7 @@
   "homepage": "https://github.com/arielrahmane/DLServer#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "commander": "^2.20.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "morgan": "^1.9.1",
