@@ -7,6 +7,7 @@ const FLAG = require('./modules/flags');
 const NM = require('./modules/nodesManage');
 const SR = require('./modules/sensRead');
 const MIXINS = require('./modules/mixins');
+const AnalogCtl = require('./modules/analogControl');
 const DBstorage = require('../DL_modules/DBstorage');
 const CONFIG = require('./config');
 
@@ -115,4 +116,6 @@ module.exports.engine = function() {
       inMessage = COM.read(data, inMessage);
     });
   });
+
+  AnalogCtl.analogctl();
 };
