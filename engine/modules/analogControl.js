@@ -1,4 +1,5 @@
 const Engine = require('../engine');
+const FLAG = require('./flags');
 const Gpio = require('pigpio').Gpio;
 
 const button = new Gpio(23, {
@@ -13,12 +14,14 @@ const button = new Gpio(23, {
   module.exports.analogctl = function () {
     button.on('alert', (level, tick) => {
         console.log("BOTON PRESIONADO: " + level + " -> time: " + tick);
-        if (level === 1) {
-            Engine.startNodesScan(function() {
-                Engine.startSensorsRead();
-            });
-        } else if (level === 0) {
-            Engine.stopSensorsRead();
+        if (FLAG.getDeviceScanning() == false) {
+            if (level === 1) {
+                Engine.startNodesScan(function() {
+                    Engine.startSensorsRead();
+                });
+            } else if (level === 0) {
+                Engine.stopSensorsRead();
+            }
         }
       });
   }

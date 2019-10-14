@@ -49,6 +49,7 @@ function init()
 
 module.exports.startNodesScan = function(callback) {
   FLAG.setInitialStage(true);
+  FLAG.setDeviceScanning(true);
   var nodeID = 0;
   FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
   DBstorage.createNodeStatus();
@@ -63,6 +64,7 @@ module.exports.startNodesScan = function(callback) {
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
+      FLAG.setDeviceScanning(false);
       NM.setCurrentID(NM.getActiveNodes()[0]);
       callback();
     }
@@ -73,12 +75,14 @@ let sensorsReadInterval;
 
 module.exports.startSensorsRead = function() {
   console.log("SENSORS READ STARTED!!!");
+  FLAG.setDeviceScanning(false);
   FLAG.setDeviceRunning(true);
   sensorsReadInterval = setInterval(SR.readSensors, 6000);
 }
 
 module.exports.stopSensorsRead = function () {
   console.log("SENSORS READ STOPED!!!");
+  FLAG.setDeviceScanning(false);
   FLAG.setDeviceRunning(false);
   clearInterval(sensorsReadInterval);
 }
