@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const mysql = require('mysql')
 const Sequelize = require('sequelize');
 const NodeStatusModel = require("../models/nodeStatus");
+// const WAP = require('../DL_modules/wap');
 
 const app = express()
 app.use(morgan('combined'))
@@ -27,6 +28,11 @@ Engine.engine();
 //Engine.startNodesScan(Engine.startSensorsRead);
 
 //Port config
-app.listen(process.env.PORT || 8081) //, "192.168.0.7")
+ app.listen(process.env.PORT || 8081); //, "https://opendl.localtunnel.me"); //, "192.168.0.7")
+ /*app.listen(process.env.PORT || 8081, "opendl.localtunnel.me", function() {
+ 	 console.log("... port %d in %s mode", app.address());
+ });*/
+
+// setTimeout(WAP.wap, 5000);
 
 module.exports = app;
