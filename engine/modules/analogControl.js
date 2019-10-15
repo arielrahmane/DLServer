@@ -9,19 +9,21 @@ const button = new Gpio(23, {
     //edge: Gpio.EITHER_EDGE //Interruption in rising and falling edge
   });
 
-  button.glitchFilter(100000); //100ms de espera para filtrar rebote
+  button.glitchFilter(100000); //100ms waiting for rebound filter
 
   module.exports.analogctl = function () {
     button.on('alert', (level, tick) => {
         console.log("BOTON PRESIONADO: " + level + " -> time: " + tick);
         if (FLAG.getDeviceScanning() == false) {
-            if (level === 1) {
+            if (level === 1 && FLAG.getDeviceRunning() == false) {
                 Engine.startNodesScan(function() {
                     Engine.startSensorsRead();
                 });
-            } else if (level === 0) {
+            } else if (level === 0 && FLAG.getDeviceRunning() == true) {
                 Engine.stopSensorsRead();
             }
+        } else if (FLAG.getDeviceScanning() == true) {
+            
         }
       });
   }
