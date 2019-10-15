@@ -34,6 +34,6 @@ Engine.engine();
  	 console.log("... port %d in %s mode", app.address());
  });*/
 
-InternetAv.onlineCheck(InternetAv.startTunnel());
+InternetAv.onlineCheck(InternetAv.startTunnel, true);
 
 module.exports = app;

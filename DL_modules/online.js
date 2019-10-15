@@ -1,36 +1,21 @@
-const internetAvailable = require("internet-available");
 const localtunnel = require('localtunnel');
 const isOnline = require('is-online');
 
-// Most easy way
-/*var onlineCheck2 = function(timeout_, retires_, callback) {
-    internetAvailable({
-        // Provide maximum execution time for the verification
-        timeout: timeout_,
-        // If it tries 5 times and it fails, then it will throw no internet
-        retries: retires_
-    }).then(() => {
-        console.log("INTERNET AVAILABLE");
-        onlineCheck2();
-        callback();
-    }).catch(() => {
-        console.log("NO INTERNET");
-    });
-}*/
-
-function onlineCheck(callback) {
+function onlineCheck(callback, retry) {
     isOnline().then( (online) => {
         if(online) {
-            console.log("We have internet");
+            console.log("Device is online");
             callback();
         } else {
-            console.log("Houston we have a problem");
-            setTimeout(() => {
-                onlineCheck(callback);
-            }, 5000, callback);
+            console.log("No connection to internet");
+            if(retry) {
+                setTimeout(() => {
+                    onlineCheck(callback);
+                }, 5000, callback);
+            }
         }
-    }).catch( () => {
-        console.log("Problem connecting");
+    }).catch( (err) => {
+        if (err) {console.log("Problem connecting: " + err);}
     });
 }
 
