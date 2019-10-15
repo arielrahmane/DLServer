@@ -7,6 +7,7 @@ const FLAG = require('./modules/flags');
 const NM = require('./modules/nodesManage');
 const SR = require('./modules/sensRead');
 const MIXINS = require('./modules/mixins');
+const AnalogCtl = require('./modules/analogControl');
 const DBstorage = require('../DL_modules/DBstorage');
 const CONFIG = require('./config');
 
@@ -46,13 +47,19 @@ function init()
   }
 }
 
+let askNode;
+var nodeID = 0;
+
 module.exports.startNodesScan = function(callback) {
   FLAG.setInitialStage(true);
-  var nodeID = 0;
+  FLAG.setDeviceScanning(true);
+  AnalogCtl.scanningLed(true);
   FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
   DBstorage.createNodeStatus();
-  askNode = setInterval(gatherActiveNodes, 1000);
-  function gatherActiveNodes()
+  askNode = setInterval(gatherActiveNodes, 1000, callback);
+}
+
+function gatherActiveNodes(callback)
   {
     NM.setCurrentID(nodeID);
     console.log(NM.getCurrentID());
@@ -62,23 +69,38 @@ module.exports.startNodesScan = function(callback) {
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
+      FLAG.setDeviceScanning(false);
+      nodeID = 0;
+      AnalogCtl.scanningLed(false);
       NM.setCurrentID(NM.getActiveNodes()[0]);
       callback();
     }
   }
+
+module.exports.stopNodesScan = function() {
+  console.log("NODES SCAN STOPED!!!");
+  clearInterval(askNode);
+  FLAG.setInitialStage(false);
+  FLAG.setDeviceScanning(false);
+  AnalogCtl.scanningLed(false);
+  nodeID = 0;
 }
 
 let sensorsReadInterval;
 
 module.exports.startSensorsRead = function() {
   console.log("SENSORS READ STARTED!!!");
+  FLAG.setDeviceScanning(false);
   FLAG.setDeviceRunning(true);
+  AnalogCtl.runningLed(true);
   sensorsReadInterval = setInterval(SR.readSensors, 6000);
 }
 
 module.exports.stopSensorsRead = function () {
   console.log("SENSORS READ STOPED!!!");
+  FLAG.setDeviceScanning(false);
   FLAG.setDeviceRunning(false);
+  AnalogCtl.runningLed(false);
   clearInterval(sensorsReadInterval);
 }
 
@@ -115,4 +137,6 @@ module.exports.engine = function() {
       inMessage = COM.read(data, inMessage);
     });
   });
+
+  AnalogCtl.analogctl();
 };

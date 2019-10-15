@@ -1,6 +1,7 @@
 let initialStage_ = false;
 let startedBody_ = false;
 let deviceRunning_ = false;
+let deviceScanning_ = false;
 
 module.exports = {
 	setInitialStage: function(val) {
@@ -20,5 +21,11 @@ module.exports = {
 	},
 	getDeviceRunning: function() {
 		return deviceRunning_;
+	},
+	setDeviceScanning: function(val) {
+		deviceScanning_ = val;
+	},
+	getDeviceScanning: function() {
+		return deviceScanning_;
 	}
 };
