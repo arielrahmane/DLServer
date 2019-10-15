@@ -20,17 +20,18 @@
   "homepage": "https://github.com/arielrahmane/DLServer#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "commander": "^2.20.0",
+    "commander": "^2.20.3",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
+    "internet-available": "^1.0.0",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
-    "mysql2": "^1.6.5",
-    "nodemon": "^1.19.0",
-    "pigpio": "^1.2.2",
+    "mysql2": "^1.7.0",
+    "nodemon": "^1.19.3",
+    "pigpio": "^1.3.0",
     "raspi": "^6.0.1",
-    "raspi-serial": "^5.1.1",
-    "sequelize": "^5.8.5",
+    "raspi-serial": "^5.1.2",
+    "sequelize": "^5.19.6",
     "serialport": "^7.1.5"
   }
 }

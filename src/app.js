@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const mysql = require('mysql')
 const Sequelize = require('sequelize');
 const NodeStatusModel = require("../models/nodeStatus");
+const InternetAv = require("../DL_modules/online");
 // const WAP = require('../DL_modules/wap');
 
 const app = express()
@@ -33,6 +34,6 @@ Engine.engine();
  	 console.log("... port %d in %s mode", app.address());
  });*/
 
-// setTimeout(WAP.wap, 5000);
+InternetAv.onlineCheck(5000, 30);
 
 module.exports = app;
