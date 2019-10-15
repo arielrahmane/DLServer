@@ -6,7 +6,6 @@ const button = new Gpio(23, {
     mode: Gpio.INPUT,
     pullUpDown: Gpio.PUD_DOWN, //Pull-down for gpio 
     alert: true
-    //edge: Gpio.EITHER_EDGE //Interruption in rising and falling edge
   });
 
   button.glitchFilter(100000); //100ms waiting for rebound filter
@@ -23,7 +22,9 @@ const button = new Gpio(23, {
                 Engine.stopSensorsRead();
             }
         } else if (FLAG.getDeviceScanning() == true) {
-            
+            if (level === 0) {
+                Engine.stopNodesScan();
+            }
         }
       });
   }

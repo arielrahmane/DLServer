@@ -53,26 +53,9 @@ var nodeID = 0;
 module.exports.startNodesScan = function(callback) {
   FLAG.setInitialStage(true);
   FLAG.setDeviceScanning(true);
-  // var nodeID = 0;
   FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
   DBstorage.createNodeStatus();
   askNode = setInterval(gatherActiveNodes, 1000, callback);
-  /*askNode = setInterval(gatherActiveNodes, 1000);
-  function gatherActiveNodes()
-  {
-    NM.setCurrentID(nodeID);
-    console.log(NM.getCurrentID());
-    COM.send(nodeID);
-    nodeID++;
-    if (nodeID > CONFIG.numberOfNodes_-1) 
-    {
-      clearInterval(askNode);
-      FLAG.setInitialStage(false);
-      FLAG.setDeviceScanning(false);
-      NM.setCurrentID(NM.getActiveNodes()[0]);
-      callback();
-    }
-  }*/
 }
 
 function gatherActiveNodes(callback)
@@ -86,15 +69,18 @@ function gatherActiveNodes(callback)
       clearInterval(askNode);
       FLAG.setInitialStage(false);
       FLAG.setDeviceScanning(false);
+      nodeID = 0;
       NM.setCurrentID(NM.getActiveNodes()[0]);
       callback();
     }
   }
 
 module.exports.stopNodesScan = function() {
+  console.log("NODES SCAN STOPED!!!");
   clearInterval(askNode);
   FLAG.setInitialStage(false);
   FLAG.setDeviceScanning(false);
+  nodeID = 0;
 }
 
 let sensorsReadInterval;
