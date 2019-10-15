@@ -1,5 +1,22 @@
 const localtunnel = require('localtunnel');
 const isOnline = require('is-online');
+const { exec } = require('child_process');
+
+var command = "sudo wifi-connect -s OpenDL -p arielraspi";
+
+function startWAP() {
+    exec(command, (err, stdout, stderr) => {
+        if (err) {
+            // node couldn't execute the command
+            console.log("Command could not be executed");
+            return;
+        }
+            // the *entire* stdout and stderr (buffered)
+            onlineCheck(startTunnel, true);
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        });
+}
 
 function onlineCheck(callback, retry) {
     isOnline().then( (online) => {
@@ -41,5 +58,6 @@ async function startTunnel() {
 
 module.exports = {
     onlineCheck,
-    startTunnel
+    startTunnel,
+    startWAP
 }
