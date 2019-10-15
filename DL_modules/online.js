@@ -1,8 +1,9 @@
 const internetAvailable = require("internet-available");
 const localtunnel = require('localtunnel');
+const isOnline = require('is-online');
 
 // Most easy way
-var onlineCheck = function(timeout_, retires_, callback) {
+/*var onlineCheck2 = function(timeout_, retires_, callback) {
     internetAvailable({
         // Provide maximum execution time for the verification
         timeout: timeout_,
@@ -10,13 +11,30 @@ var onlineCheck = function(timeout_, retires_, callback) {
         retries: retires_
     }).then(() => {
         console.log("INTERNET AVAILABLE");
+        onlineCheck2();
         callback();
     }).catch(() => {
         console.log("NO INTERNET");
     });
+}*/
+
+function onlineCheck(callback) {
+    isOnline().then( (online) => {
+        if(online) {
+            console.log("We have internet");
+            callback();
+        } else {
+            console.log("Houston we have a problem");
+            setTimeout(() => {
+                onlineCheck(callback);
+            }, 5000, callback);
+        }
+    }).catch( () => {
+        console.log("Problem connecting");
+    });
 }
 
-async function  startTunnel() {
+async function startTunnel() {
     const tunnel = await localtunnel({ 
         port: 8081,
         subdomain: "opendl"
