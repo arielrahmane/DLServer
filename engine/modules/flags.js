@@ -2,6 +2,7 @@ let initialStage_ = false;
 let startedBody_ = false;
 let deviceRunning_ = false;
 let deviceScanning_ = false;
+let tunnel_;
 
 module.exports = {
 	setInitialStage: function(val) {
@@ -27,5 +28,11 @@ module.exports = {
 	},
 	getDeviceScanning: function() {
 		return deviceScanning_;
+	},
+	setTunnel: function(val) {
+		tunnel_ = val;
+	},
+	getTunnel: function() {
+		return tunnel_;
 	}
 };

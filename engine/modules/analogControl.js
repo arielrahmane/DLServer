@@ -17,6 +17,14 @@ const push_button = new Gpio(8, {
 
 const deviceRunningLed = new Gpio(24, {mode: Gpio.OUTPUT});
 const nodeScanningLed = new Gpio(25, {mode: Gpio.OUTPUT});
+const internetConnectionLed = new Gpio(7, {mode: Gpio.OUTPUT});
+
+deviceRunningLed.digitalWrite(0);
+nodeScanningLed.digitalWrite(0);
+internetConnectionLed.digitalWrite(0);
+
+let scanLedBlink;
+let inernetLedBlink;
 
 button.glitchFilter(100000); //100ms waiting for rebound filter
 push_button.glitchFilter(100000); //100ms waiting for rebound filter
@@ -45,7 +53,23 @@ module.exports.analogctl = function () {
             setTimeout(() => {
                 if (push_button.digitalRead() === 1) {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
-                    InternetAv.startWAP();
+                    inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
+                    if (FLAG.getTunnel()) {FLAG.getTunnel().close()};
+                    InternetAv.startWAP()
+                    .then( (val) => {
+                        console.log("Returned " + val);
+                        clearInterval(inernetLedBlink);
+                        inernetLedBlink = setInterval(blink, 200, internetConnectionLed);
+                        setTimeout(() => {
+                            clearInterval(inernetLedBlink);
+                            internetConnectionLed.digitalWrite(1);
+                        }, 1000);
+                    })
+                    .catch( (val) => {
+                        console.log("Returned " + val);
+                        clearInterval(inernetLedBlink);
+                        internetConnectionLed.digitalWrite(0);
+                    });
                 }
             }, 3000);
         } else {
@@ -62,19 +86,17 @@ module.exports.runningLed = function(state) {
     }
 }
 
-let scanLedBlink;
-
 module.exports.scanningLed = function(state) {
     if (state == true) {
-        scanLedBlink = setInterval(blink, 500);
+        scanLedBlink = setInterval(blink, 500, nodeScanningLed);
     } else if (state == false) {
         clearInterval(scanLedBlink);
         nodeScanningLed.digitalWrite(0);
     }
 }
 
-function blink() {
-    nodeScanningLed.digitalWrite(!nodeScanningLed.digitalRead());
+function blink(led) {
+    led.digitalWrite(!led.digitalRead());
 }
    
  
