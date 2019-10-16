@@ -1,6 +1,7 @@
 const Engine = require('../engine');
 const FLAG = require('./flags');
 const Gpio = require('pigpio').Gpio;
+const InternetAv = require("../../DL_modules/online");
 
 const button = new Gpio(23, {
     mode: Gpio.INPUT,
@@ -8,10 +9,17 @@ const button = new Gpio(23, {
     alert: true
   });
 
+const push_button = new Gpio(8, {
+    mode: Gpio.INPUT,
+    pullUpDown: Gpio.PUD_DOWN, //Pull-down for gpio 
+    alert: true
+});
+
 const deviceRunningLed = new Gpio(24, {mode: Gpio.OUTPUT});
 const nodeScanningLed = new Gpio(25, {mode: Gpio.OUTPUT});
 
 button.glitchFilter(100000); //100ms waiting for rebound filter
+push_button.glitchFilter(100000); //100ms waiting for rebound filter
 
 module.exports.analogctl = function () {
     button.on('alert', (level, tick) => {
@@ -28,6 +36,20 @@ module.exports.analogctl = function () {
             if (level === 0) {
                 Engine.stopNodesScan();
             }
+        }
+    });
+
+    push_button.on('alert', (level, tick) => {
+        if (level === 1) {
+            console.log("PULSADOR PRESIONADO");
+            setTimeout(() => {
+                if (push_button.digitalRead() === 1) {
+                    console.log("Button pushed for 3 seconds. Proceed to connect.");
+                    InternetAv.startWAP();
+                }
+            }, 3000);
+        } else {
+            console.log("PULSADOR SOLTADO");
         }
     });
 }

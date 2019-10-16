@@ -12,6 +12,7 @@ function startWAP() {
             return;
         }
             // the *entire* stdout and stderr (buffered)
+            console.log("Executing WiFi-Connect command");
             onlineCheck(startTunnel, true);
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);

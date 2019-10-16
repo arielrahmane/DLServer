@@ -35,6 +35,6 @@ Engine.engine();
  });*/
 
 //InternetAv.onlineCheck(InternetAv.startTunnel, true);
-InternetAv.startWAP();
+//InternetAv.startWAP();
 
 module.exports = app;
