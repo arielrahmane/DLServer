@@ -5,13 +5,13 @@ const InternetAv = require("../../DL_modules/online");
 
 const button = new Gpio(23, {
     mode: Gpio.INPUT,
-    pullUpDown: Gpio.PUD_DOWN, //Pull-down for gpio 
+    pullUpDown: Gpio.PUD_UP, //Pull-down for gpio 
     alert: true
   });
 
 const push_button = new Gpio(8, {
     mode: Gpio.INPUT,
-    pullUpDown: Gpio.PUD_DOWN, //Pull-down for gpio 
+    pullUpDown: Gpio.PUD_UP, //Pull-down for gpio 
     alert: true
 });
 
@@ -31,27 +31,27 @@ push_button.glitchFilter(100000); //100ms waiting for rebound filter
 
 module.exports.analogctl = function () {
     button.on('alert', (level, tick) => {
-        console.log("BOTON PRESIONADO: " + level + " -> time: " + tick);
+        console.log("BOTON PRESIONADO: " + level + " -> time: " + tick); //lógica negada
         if (FLAG.getDeviceScanning() == false) {
-            if (level === 1 && FLAG.getDeviceRunning() == false) {
+            if (level === 0 && FLAG.getDeviceRunning() == false) {
                 Engine.startNodesScan(function() {
                     Engine.startSensorsRead();
                 });
-            } else if (level === 0 && FLAG.getDeviceRunning() == true) {
+            } else if (level === 1 && FLAG.getDeviceRunning() == true) {
                 Engine.stopSensorsRead();
             }
         } else if (FLAG.getDeviceScanning() == true) {
-            if (level === 0) {
+            if (level === 1) {
                 Engine.stopNodesScan();
             }
         }
     });
 
     push_button.on('alert', (level, tick) => {
-        if (level === 1) {
-            console.log("PULSADOR PRESIONADO");
+        if (level === 0) {
+            console.log("PULSADOR PRESIONADO"); //lógica negada
             setTimeout(() => {
-                if (push_button.digitalRead() === 1) {
+                if (push_button.digitalRead() === 0) {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
                     inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
                     if (FLAG.getTunnel()) {FLAG.getTunnel().close()};
