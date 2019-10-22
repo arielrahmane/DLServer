@@ -102,6 +102,7 @@ module.exports.stopSensorsRead = function () {
   FLAG.setDeviceRunning(false);
   AnalogCtl.runningLed(false);
   clearInterval(sensorsReadInterval);
+  SR.stopSensors();
 }
 
 module.exports.engine = function() {
