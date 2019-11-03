@@ -21,9 +21,16 @@ function updateNodeStatus(node, status) {
 function createSettingsOnce() {
 	console.log('CREATING SETTINGS ROW!');
 	DB.Settings.create({
-		deviceConfigured: false,
 		amountOfNodes: 0,
 		sensorSamplingFreq: 0.0
+	});
+}
+
+function createSystemOnce() {
+	console.log('CREATING SYSTEM ROW!');
+	DB.Settings.create({
+		deviceConfigured: false,
+		tunnel: ""
 	});
 }
 
@@ -33,7 +40,9 @@ function updateSettings(values) {
 			&& values.sensorSamplingFreq > 0
 			&& typeof(values.amountOfNodes) === 'number'
 			&& typeof(values.sensorSamplingFreq) === 'number') {
-			DB.Settings.update({amountOfNodes: values.amountOfNodes, sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
+			DB.Settings.update({
+				amountOfNodes: values.amountOfNodes, 
+				sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
 			.then(result => {
 				var response = {response: result, message: 'Configuración actualizada.'};
 				resolve(response);
@@ -48,6 +57,14 @@ function updateSettings(values) {
 			reject(response);
 		}
 	});
+}
+
+function updateSystem(paramName, paramValue) {
+	if (paramName === "deviceConfigured") {
+		DB.System.update({deviceConfigured: paramValue}, {where: {id: 1}});
+	} else if (paramName === "tunnel") {
+		DB.System.update({tunnel: paramValue}, {where: {id: 1}});
+	} else return;
 }
 
 function getSettings() {
@@ -134,5 +151,7 @@ module.exports = {
 	updateSettings,
 	createSettingsOnce,
 	getTableCount,
-	getSettings
+	getSettings,
+	createSystemOnce,
+	updateSystem
 }

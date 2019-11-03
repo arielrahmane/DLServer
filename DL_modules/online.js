@@ -64,6 +64,7 @@ async function startTunnel() {
     tunnel.url;
     console.log(tunnel.url);
     FLAG.setTunnel(tunnel);
+    console.log(tunnel);
    
     tunnel.on('close', () => {
       console.log("TUNNEL IS CLOSED");

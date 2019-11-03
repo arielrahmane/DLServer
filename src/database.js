@@ -29,6 +29,10 @@ sequelize.sync().then(() => {
     .then(count => {
       if (count == 0) DBstorage.createSettingsOnce();
   });
+  DBstorage.getTableCount('System')
+    .then(count => {
+      if (count == 0) DBstorage.createSystemOnce();
+  });
 });
 
 module.exports.NodeStatus = NodeStatus;
