@@ -68,11 +68,6 @@ async function startTunnel() {
 
     let tunnelStr = JSON.stringify(tunnel);
     DBStorage.updateSystem('tunnel', tunnelStr);
-    
-    //test
-    DBStorage.getSystem().then(system => {
-        console.log(system.tunnel)
-    });
    
     tunnel.on('close', () => {
       console.log("TUNNEL IS CLOSED");

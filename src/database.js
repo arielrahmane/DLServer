@@ -3,7 +3,6 @@ const nodeStatusModel = require('../models/nodeStatus');
 const nodesDataModel = require('../models/nodesData');
 const settingsModel = require('../models/settings');
 const systemModel = require('../models/system');
-//const DBstorage = require('../DL_modules/DBstorage');
 
 const sequelize = new Sequelize('dlserverDB', 'root', 'ariel', {
   host: 'localhost',
@@ -35,10 +34,6 @@ sequelize.sync().then(() => {
       });
     }
   });
-  /*DBstorage.getTableCount('Settings')
-    .then(count => {
-      if (count == 0) DBstorage.createSettingsOnce();
-  });*/
 
   System.count().then(count => {
     if (count == 0) {
@@ -48,16 +43,6 @@ sequelize.sync().then(() => {
       });
     }
   });
-  /*DBstorage.getTableCount('System')
-    .then(count => {
-      if (count == 0) {
-        console.log("Creating SYSTEM table");
-        DBstorage.createSystemOnce();
-      };
-    })
-    .catch(error => {
-      console.log("ERROR AL CREAR SYSTEM " + error);
-    });*/
 });
 
 module.exports.NodeStatus = NodeStatus;

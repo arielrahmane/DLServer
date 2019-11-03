@@ -56,7 +56,16 @@ module.exports.analogctl = function () {
                 if (push_button.digitalRead() === 0) {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
                     inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
-                    if (FLAG.getTunnel()) {FLAG.getTunnel().close()};
+                    /*if (FLAG.getTunnel()) {
+                        FLAG.getTunnel().close()
+                    };*/
+                    DBstorage.getSystem().then(system => {
+                        if (system.tunnel.length > 5) {                            
+                            console.log("intentando cerrar tunnel");
+                            var tunnel = JSON.parse(system.tunnel);
+                            tunnel.close();
+                        }
+                    });
                     InternetAv.startWAP()
                     .then( (val) => {
                         console.log("Returned " + val);
