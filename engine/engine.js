@@ -77,12 +77,14 @@ function gatherActiveNodes(callback)
     }
   }
 
-module.exports.stopNodesScan = function() {
+  //aborted is a boolean for stating if the function was called because of aborting the scan 
+  // (aborted=true) or because the node scan finished (aborted = false)
+module.exports.stopNodesScan = function(aborted) {
   console.log("NODES SCAN STOPED!!!");
   clearInterval(askNode);
   FLAG.setInitialStage(false);
   FLAG.setDeviceScanning(false);
-  AnalogCtl.scanningLed(false);
+  AnalogCtl.scanningLed(false, aborted);
   nodeID = 0;
 }
 

@@ -16,11 +16,11 @@ const push_button = new Gpio(8, {
 });
 
 const deviceRunningLed = new Gpio(24, {mode: Gpio.OUTPUT});
-const nodeScanningLed = new Gpio(25, {mode: Gpio.OUTPUT});
+const stopLed = new Gpio(25, {mode: Gpio.OUTPUT});
 const internetConnectionLed = new Gpio(7, {mode: Gpio.OUTPUT});
 
 deviceRunningLed.digitalWrite(0);
-nodeScanningLed.digitalWrite(0);
+stopLed.digitalWrite(1);
 internetConnectionLed.digitalWrite(0);
 
 let scanLedBlink;
@@ -31,7 +31,8 @@ push_button.glitchFilter(100000); //100ms waiting for rebound filter
 
 module.exports.analogctl = function () {
     button.on('alert', (level, tick) => {
-        console.log("BOTON PRESIONADO: " + level + " -> time: " + tick); //lógica negada
+        //LÓGICA NEGADA
+        console.log("BOTON PRESIONADO: " + level + " -> time: " + tick); 
         if (FLAG.getDeviceScanning() == false) {
             if (level === 0 && FLAG.getDeviceRunning() == false) {
                 Engine.startNodesScan(function() {
@@ -42,7 +43,7 @@ module.exports.analogctl = function () {
             }
         } else if (FLAG.getDeviceScanning() == true) {
             if (level === 1) {
-                Engine.stopNodesScan();
+                Engine.stopNodesScan(true);
             }
         }
     });
@@ -81,17 +82,21 @@ module.exports.analogctl = function () {
 module.exports.runningLed = function(state) {
     if (state == true) {
         deviceRunningLed.digitalWrite(1);
+        stopLed.digitalWrite(0);
     } else if (state == false) {
         deviceRunningLed.digitalWrite(0);
+        stopLed.digitalWrite(1);
     }
 }
 
-module.exports.scanningLed = function(state) {
+module.exports.scanningLed = function(state, aborted) {
     if (state == true) {
-        scanLedBlink = setInterval(blink, 500, nodeScanningLed);
+        scanLedBlink = setInterval(blink, 500, deviceRunningLed);
+        stopLed.digitalWrite(0);
     } else if (state == false) {
         clearInterval(scanLedBlink);
-        nodeScanningLed.digitalWrite(0);
+        deviceRunningLed.digitalWrite(0);
+        if (aborted) stopLed.digitalWrite(1);
     }
 }
 
