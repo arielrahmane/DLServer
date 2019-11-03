@@ -28,7 +28,7 @@ function createSettingsOnce() {
 
 function createSystemOnce() {
 	console.log('CREATING SYSTEM ROW!');
-	DB.Settings.create({
+	DB.System.create({
 		deviceConfigured: false,
 		tunnel: ""
 	});
@@ -108,6 +108,12 @@ function deleteTable(tableName) {
 				truncate: true
 			});
 			break;
+		case 'System': 
+			DB.System.destroy({
+				where: {},
+				truncate: true
+			});
+			break;
 		default:
 			console.log('Error: No existe la tabla que se quiere eliminar ', tableName);
 	}
@@ -134,6 +140,13 @@ function getTableCount(tableName) {
 				  tableCount = count;
 				  console.log("There are " + tableCount + " Settings!");
 				  resolve(count);
+				});
+				break;
+			case 'System': 
+				DB.System.count().then(count => {
+					tableCount = count;
+					console.log("There are " + tableCount + " System!");
+					resolve(count);
 				});
 				break;
 			default:
