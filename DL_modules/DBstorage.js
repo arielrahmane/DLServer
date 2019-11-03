@@ -75,6 +75,14 @@ function getSettings() {
 	});
 }
 
+function getSystem() {
+	return new Promise(function(resolve, reject){
+		DB.System.findOne({ where: {id: 1} }).then(system => {
+			resolve(system.dataValues);
+		});
+	});
+}
+
 function addNodeData(nodeData) {
 	DB.NodesData.create ({
 		nodeID: nodeData.nodeID,
@@ -166,5 +174,6 @@ module.exports = {
 	getTableCount,
 	getSettings,
 	createSystemOnce,
-	updateSystem
+	updateSystem,
+	getSystem
 }

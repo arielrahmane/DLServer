@@ -2,6 +2,7 @@ const localtunnel = require('localtunnel');
 const isOnline = require('is-online');
 const { exec } = require('child_process');
 const FLAG = require('../engine/modules/flags');
+const DBStorage = require('./DBstorage');
 
 var command = "sudo wifi-connect -s OpenDL -p arielraspi";
 
@@ -56,7 +57,7 @@ function onlineCheck(callback, retry) {
 async function startTunnel() {
     const tunnel = await localtunnel({ 
         port: 8081,
-        subdomain: "opendl"
+        subdomain: "opendltest"
       });
    
     // the assigned public url for your tunnel
@@ -64,7 +65,14 @@ async function startTunnel() {
     tunnel.url;
     console.log(tunnel.url);
     FLAG.setTunnel(tunnel);
-    console.log(tunnel);
+
+    let tunnelStr = JSON.stringify(tunnel);
+    DBStorage.updateSystem('tunnel', tunnelStr);
+    
+    //test
+    DBStorage.getSystem().then(system => {
+        console.log(system.tunnel)
+    });
    
     tunnel.on('close', () => {
       console.log("TUNNEL IS CLOSED");

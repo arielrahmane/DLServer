@@ -2,6 +2,7 @@ const Engine = require('../engine');
 const FLAG = require('./flags');
 const Gpio = require('pigpio').Gpio;
 const InternetAv = require("../../DL_modules/online");
+const DBstorage = require("../../DL_modules/DBstorage");
 
 const button = new Gpio(23, {
     mode: Gpio.INPUT,

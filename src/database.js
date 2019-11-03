@@ -3,7 +3,7 @@ const nodeStatusModel = require('../models/nodeStatus');
 const nodesDataModel = require('../models/nodesData');
 const settingsModel = require('../models/settings');
 const systemModel = require('../models/system');
-const DBstorage = require('../DL_modules/DBstorage');
+//const DBstorage = require('../DL_modules/DBstorage');
 
 const sequelize = new Sequelize('dlserverDB', 'root', 'ariel', {
   host: 'localhost',
@@ -27,11 +27,28 @@ const System = systemModel(sequelize, Sequelize);
 // Create tables if they were not already in the database.
 sequelize.sync().then(() => {
   console.log('TABLES HAVE BEEN CREATED');
-  DBstorage.getTableCount('Settings')
+  Settings.count().then(count => {
+    if (count == 0) {
+      Settings.create({
+        amountOfNodes: 0,
+        sensorSamplingFreq: 0.0
+      });
+    }
+  });
+  /*DBstorage.getTableCount('Settings')
     .then(count => {
       if (count == 0) DBstorage.createSettingsOnce();
+  });*/
+
+  System.count().then(count => {
+    if (count == 0) {
+      System.create({
+        deviceConfigured: false,
+        tunnel: ""
+      });
+    }
   });
-  DBstorage.getTableCount('System')
+  /*DBstorage.getTableCount('System')
     .then(count => {
       if (count == 0) {
         console.log("Creating SYSTEM table");
@@ -40,7 +57,7 @@ sequelize.sync().then(() => {
     })
     .catch(error => {
       console.log("ERROR AL CREAR SYSTEM " + error);
-    });
+    });*/
 });
 
 module.exports.NodeStatus = NodeStatus;
