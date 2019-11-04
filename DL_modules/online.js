@@ -56,11 +56,19 @@ function onlineCheck(callback, retry) {
 
 function startTunnel() {
     DBStorage.getSystem().then(system => {
-        initTunnel(system.ltSubdomain);
+        var ltSubdomain = system.ltSubdomain;
+        initTunnel(ltSubdomain);
     })
 }
 
-async function initTunnel(ltSubdomain) {
+function retryTunnel(retryNumb) {
+    DBStorage.getSystem().then(system => {
+        var ltSubdomain = system.ltSubdomain + retryNumb.toString();
+        initTunnel(ltSubdomain, retryNumb);
+    })
+}
+
+async function initTunnel(ltSubdomain, retryNumb) {
     const tunnel = await localtunnel({ 
         port: 8081,
         subdomain: ltSubdomain
@@ -68,6 +76,9 @@ async function initTunnel(ltSubdomain) {
 
     tunnel.url;
     console.log(tunnel.url);
+    if (ltSubdomain.localeCompare(tunnel.opts.subdomain) !== 0) {
+        retryTunnel(retryNumb+1);
+    };
     FLAG.setTunnel(tunnel);
     // the assigned public url for your tunnel
     // i.e. https://abcdefgjhij.localtunnel.me
