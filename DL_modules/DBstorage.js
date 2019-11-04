@@ -30,7 +30,7 @@ function createSystemOnce() {
 	console.log('CREATING SYSTEM ROW!');
 	DB.System.create({
 		deviceConfigured: false,
-		tunnel: ""
+		ltSubdomain: "opendl"
 	});
 }
 
@@ -62,8 +62,8 @@ function updateSettings(values) {
 function updateSystem(paramName, paramValue) {
 	if (paramName === "deviceConfigured") {
 		DB.System.update({deviceConfigured: paramValue}, {where: {id: 1}});
-	} else if (paramName === "tunnel") {
-		DB.System.update({tunnel: paramValue}, {where: {id: 1}});
+	} else if (paramName === "ltSubdomain") {
+		DB.System.update({ltSubdomain: paramValue}, {where: {id: 1}});
 	} else return;
 }
 

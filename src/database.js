@@ -39,7 +39,7 @@ sequelize.sync().then(() => {
     if (count == 0) {
       System.create({
         deviceConfigured: false,
-        tunnel: ""
+        ltSubdomain: "opendl"
       });
     }
   });

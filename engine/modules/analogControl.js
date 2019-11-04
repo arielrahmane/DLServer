@@ -2,7 +2,6 @@ const Engine = require('../engine');
 const FLAG = require('./flags');
 const Gpio = require('pigpio').Gpio;
 const InternetAv = require("../../DL_modules/online");
-const DBstorage = require("../../DL_modules/DBstorage");
 
 const button = new Gpio(23, {
     mode: Gpio.INPUT,
@@ -56,16 +55,9 @@ module.exports.analogctl = function () {
                 if (push_button.digitalRead() === 0) {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
                     inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
-                    /*if (FLAG.getTunnel()) {
-                        FLAG.getTunnel().close()
-                    };*/
-                    DBstorage.getSystem().then(system => {
-                        if (system.tunnel.length > 5) {                            
-                            console.log("intentando cerrar tunnel");
-                            var tunnel = JSON.parse(system.tunnel);
-                            tunnel.close();
-                        }
-                    });
+                    if (FLAG.getTunnel()) {
+                        FLAG.getTunnel().close();
+                    };
                     InternetAv.startWAP()
                     .then( (val) => {
                         console.log("Returned " + val);
