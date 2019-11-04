@@ -2,6 +2,7 @@ const localtunnel = require('localtunnel');
 const isOnline = require('is-online');
 const { exec } = require('child_process');
 const FLAG = require('../engine/modules/flags');
+const DBStorage = require('./DBstorage');
 
 var command = "sudo wifi-connect -s OpenDL -p arielraspi";
 
@@ -53,22 +54,39 @@ function onlineCheck(callback, retry) {
     });
 }
 
-async function startTunnel() {
+function startTunnel() {
+    DBStorage.getSystem().then(system => {
+        var ltSubdomain = system.ltSubdomain;
+        initTunnel(ltSubdomain, 0);
+    })
+}
+
+function retryTunnel(retryNumb) {
+    DBStorage.getSystem().then(system => {
+        var ltSubdomain = system.ltSubdomain + retryNumb.toString();
+        initTunnel(ltSubdomain, retryNumb);
+    })
+}
+
+async function initTunnel(ltSubdomain, retryNumb) {
     const tunnel = await localtunnel({ 
         port: 8081,
-        subdomain: "opendl"
+        subdomain: ltSubdomain
       });
-   
-    // the assigned public url for your tunnel
-    // i.e. https://abcdefgjhij.localtunnel.me
+
     tunnel.url;
     console.log(tunnel.url);
+    if (ltSubdomain.localeCompare(tunnel.opts.subdomain) !== 0) {
+        retryTunnel(retryNumb+1);
+    };
     FLAG.setTunnel(tunnel);
+    // the assigned public url for your tunnel
+    // i.e. https://abcdefgjhij.localtunnel.me
    
-    tunnel.on('close', () => {
+    FLAG.getTunnel().on('close', () => {
       console.log("TUNNEL IS CLOSED");
     });
-    tunnel.on('error', () => {
+    FLAG.getTunnel().on('error', () => {
       console.log("TUNNEL ERROR: " + err);
     });
   }

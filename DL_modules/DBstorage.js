@@ -21,9 +21,16 @@ function updateNodeStatus(node, status) {
 function createSettingsOnce() {
 	console.log('CREATING SETTINGS ROW!');
 	DB.Settings.create({
-		deviceConfigured: false,
 		amountOfNodes: 0,
 		sensorSamplingFreq: 0.0
+	});
+}
+
+function createSystemOnce() {
+	console.log('CREATING SYSTEM ROW!');
+	DB.System.create({
+		deviceConfigured: false,
+		ltSubdomain: "opendl"
 	});
 }
 
@@ -33,7 +40,9 @@ function updateSettings(values) {
 			&& values.sensorSamplingFreq > 0
 			&& typeof(values.amountOfNodes) === 'number'
 			&& typeof(values.sensorSamplingFreq) === 'number') {
-			DB.Settings.update({amountOfNodes: values.amountOfNodes, sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
+			DB.Settings.update({
+				amountOfNodes: values.amountOfNodes, 
+				sensorSamplingFreq: values.sensorSamplingFreq}, {where: {id: 1}})
 			.then(result => {
 				var response = {response: result, message: 'Configuración actualizada.'};
 				resolve(response);
@@ -50,10 +59,26 @@ function updateSettings(values) {
 	});
 }
 
+function updateSystem(paramName, paramValue) {
+	if (paramName === "deviceConfigured") {
+		DB.System.update({deviceConfigured: paramValue}, {where: {id: 1}});
+	} else if (paramName === "ltSubdomain") {
+		DB.System.update({ltSubdomain: paramValue}, {where: {id: 1}});
+	} else return;
+}
+
 function getSettings() {
 	return new Promise(function(resolve, reject){
 		DB.Settings.findOne({ where: {id: 1} }).then(settings => {
 			resolve(settings.dataValues);
+		});
+	});
+}
+
+function getSystem() {
+	return new Promise(function(resolve, reject){
+		DB.System.findOne({ where: {id: 1} }).then(system => {
+			resolve(system.dataValues);
 		});
 	});
 }
@@ -91,6 +116,12 @@ function deleteTable(tableName) {
 				truncate: true
 			});
 			break;
+		case 'System': 
+			DB.System.destroy({
+				where: {},
+				truncate: true
+			});
+			break;
 		default:
 			console.log('Error: No existe la tabla que se quiere eliminar ', tableName);
 	}
@@ -119,6 +150,13 @@ function getTableCount(tableName) {
 				  resolve(count);
 				});
 				break;
+			case 'System': 
+				DB.System.count().then(count => {
+					tableCount = count;
+					console.log("There are " + tableCount + " System!");
+					resolve(count);
+				});
+				break;
 			default:
 				console.log('Error: Table does not exist', tableName);
 				reject('The table does not exist');
@@ -134,5 +172,8 @@ module.exports = {
 	updateSettings,
 	createSettingsOnce,
 	getTableCount,
-	getSettings
+	getSettings,
+	createSystemOnce,
+	updateSystem,
+	getSystem
 }

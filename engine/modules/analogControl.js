@@ -55,7 +55,9 @@ module.exports.analogctl = function () {
                 if (push_button.digitalRead() === 0) {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
                     inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
-                    if (FLAG.getTunnel()) {FLAG.getTunnel().close()};
+                    if (FLAG.getTunnel()) {
+                        FLAG.getTunnel().close();
+                    };
                     InternetAv.startWAP()
                     .then( (val) => {
                         console.log("Returned " + val);
