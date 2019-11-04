@@ -54,25 +54,28 @@ function onlineCheck(callback, retry) {
     });
 }
 
-async function startTunnel() {
+function startTunnel() {
+    DBStorage.getSystem().then(system => {
+        initTunnel(system.ltSubdomain);
+    })
+}
+
+async function initTunnel(ltSubdomain) {
     const tunnel = await localtunnel({ 
         port: 8081,
-        subdomain: "opendltest"
+        subdomain: ltSubdomain
       });
-   
-    // the assigned public url for your tunnel
-    // i.e. https://abcdefgjhij.localtunnel.me
+
     tunnel.url;
     console.log(tunnel.url);
     FLAG.setTunnel(tunnel);
-
-    let tunnelStr = JSON.stringify(tunnel);
-    DBStorage.updateSystem('tunnel', tunnelStr);
+    // the assigned public url for your tunnel
+    // i.e. https://abcdefgjhij.localtunnel.me
    
-    tunnel.on('close', () => {
+    FLAG.getTunnel().on('close', () => {
       console.log("TUNNEL IS CLOSED");
     });
-    tunnel.on('error', () => {
+    FLAG.getTunnel().on('error', () => {
       console.log("TUNNEL ERROR: " + err);
     });
   }
