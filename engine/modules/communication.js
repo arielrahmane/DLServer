@@ -93,7 +93,7 @@ module.exports = {
 			  	NM.setCurrentNodeData("nodeID", nodeID);
 			  	NM.setCurrentNodeData("dht", dhtData_json);
 			  }
-			  else if (message.includes("VOLT")) {
+			  else if (message.includes("ALC")) {
 			  	console.log('================> MQ3 Reading: ' + message);
 			  	// It enters this block if the MQ3 sensor data is the input message. This means that the complete node has been read.
 			  	var alcohol = SM.getAlcohol(message);

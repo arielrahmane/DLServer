@@ -13,11 +13,18 @@ function getHumid(message) {
 }
 
 function getAlcohol(message) {
-	var index_high = message.search("ADC");
+	var index_high = message.search("ALC");
+	var index_low = message.lastIndexOf("!");
+	var alcohol = message.slice(index_low+1, index_high);
+	alcohol = parseFloat(alcohol);
+	return alcohol;
+
+	//old code
+	/*var index_high = message.search("ADC");
 	var index_low = message.lastIndexOf("!");
 	var adc = message.slice(index_low+1, index_high);
 	adc = parseFloat(adc);
-	return adc;
+	return adc;*/
 }
 
 module.exports = {
