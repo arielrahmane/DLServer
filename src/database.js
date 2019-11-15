@@ -6,7 +6,13 @@ const systemModel = require('../models/system');
 
 const sequelize = new Sequelize('dlserverDB', 'root', 'ariel', {
   host: 'localhost',
-  dialect: 'mysql'
+  dialect: 'mysql',
+  dialectOptions: {
+    useUTC: false,
+    dateStrings: true,
+    typeCast: true
+  },
+  timezone: '-03:00'
 });
 
 sequelize
