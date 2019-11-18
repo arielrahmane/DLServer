@@ -142,4 +142,7 @@ module.exports.engine = function() {
   });
 
   AnalogCtl.analogctl();
+
+  //Just for testing
+  // DBstorage.createdAtUpdate();
 };
