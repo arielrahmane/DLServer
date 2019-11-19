@@ -2,7 +2,7 @@
 
 const CronJob = require('cron').CronJob;
 const moment = require('moment');
-const db = require('../src/database');
+const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
 
 
@@ -24,8 +24,16 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 	console.log('Month:', d);
 });
 
+//Test routine
+const testJob = new CronJob('*/30 * * * * *', function() {
+	const d = moment();
+	console.log('Month:', d);
+	dbStorage.getNodesDataSpan(14, "2019-11-12 01:58:00", "2019-11-12 02:20:00").then(data => {console.log(data)});
+});
+
 module.exports = {
     dailyJob,
     hourJob,
-    monthJob
+	monthJob,
+	testJob
 }
