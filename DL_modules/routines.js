@@ -1,11 +1,13 @@
 //Here we create the different routines the server will be executing periodically
 
 const CronJob = require('cron').CronJob;
-const moment = require('moment')
+const moment = require('moment');
+const db = require('../src/database');
+const dbStorage = require('./DBstorage');
 
 
 //Routine every midnight
-const midnightJob = new CronJob('00 00 00 * * *', function() {
+const dailyJob = new CronJob('00 00 00 * * *', function() {
 	const d = moment();
 	console.log('Midnight:', d);
 });
@@ -23,7 +25,7 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 });
 
 module.exports = {
-    midnightJob,
+    dailyJob,
     hourJob,
     monthJob
 }
