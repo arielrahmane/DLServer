@@ -1,5 +1,8 @@
 const CONFIG = require('../engine/config');
 const DB = require('../src/database');
+const Sequelize = require('sequelize');
+
+const Op = Sequelize.Op;
 
 function createNodeStatus() {
 	deleteTable('NodeStatus');
@@ -207,6 +210,22 @@ function getTableCount(tableName) {
 	
 }
 
+
+function getNodesDataSpan(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesData.findAll({
+			where: {
+				nodeID: node,
+				createdAt: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		}).then(data => {
+			resolve(data);
+		})
+	});
+}
+
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
@@ -220,5 +239,6 @@ module.exports = {
 	getSystem,
 	addNodeHourAv,
 	addNodeDailyAv,
-	addNodeMonthlyAv
+	addNodeMonthlyAv,
+	getNodesDataSpan
 }
