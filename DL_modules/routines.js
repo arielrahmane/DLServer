@@ -11,13 +11,13 @@ const midnightJob = new CronJob('00 00 00 * * *', function() {
 });
 
 //Rutine every hour
-const hourJob = new CronJob('0 0  */1 * * *', function() {
+const hourJob = new CronJob('0 0 */1 * * *', function() {
 	const d = moment();
 	console.log('Hour:', d);
 });
 
 //Rutine every month
-const monthJob = new CronJob('0 0 0 0 */1 *', function() {
+const monthJob = new CronJob('0 0 0 1 * *', function() {
 	const d = moment();
 	console.log('Month:', d);
 });
