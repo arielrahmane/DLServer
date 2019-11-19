@@ -96,6 +96,48 @@ function addNodeData(nodeData) {
 	});
 }
 
+function addNodeHourAv(hourAv) {
+	DB.NodesHourAv.create ({
+		nodeID: hourAv.nodeID,
+		tempA: hourAv.tempA,
+		tempB: hourAv.tempB,
+		tempC: hourAv.tempC,
+		humidA: hourAv.humidA,
+		humidB: hourAv.humidB,
+		humidC: hourAv.humidC,
+		alcohol: hourAv.alcohol,
+		date: hourAv.date
+	});
+}
+
+function addNodeDailyAv(dailyAv) {
+	DB.NodesDailyAv.create ({
+		nodeID: dailyAv.nodeID,
+		tempA: dailyAv.tempA,
+		tempB: dailyAv.tempB,
+		tempC: dailyAv.tempC,
+		humidA: dailyAv.humidA,
+		humidB: dailyAv.humidB,
+		humidC: dailyAv.humidC,
+		alcohol: dailyAv.alcohol,
+		date: dailyAv.date
+	});
+}
+
+function addNodeMonthlyAv(monthlyAv) {
+	DB.NodesMonthlyAv.create ({
+		nodeID: monthlyAv.nodeID,
+		tempA: monthlyAv.tempA,
+		tempB: monthlyAv.tempB,
+		tempC: monthlyAv.tempC,
+		humidA: monthlyAv.humidA,
+		humidB: monthlyAv.humidB,
+		humidC: monthlyAv.humidC,
+		alcohol: monthlyAv.alcohol,
+		date: monthlyAv.date
+	});
+}
+
 function deleteTable(tableName) {
 	switch (tableName) {
 		case 'NodeStatus': 
@@ -175,5 +217,8 @@ module.exports = {
 	getSettings,
 	createSystemOnce,
 	updateSystem,
-	getSystem
+	getSystem,
+	addNodeHourAv,
+	addNodeDailyAv,
+	addNodeMonthlyAv
 }
