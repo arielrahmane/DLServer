@@ -5,6 +5,8 @@ const moment = require('moment');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
 
+//moment.defaultFormat = "YYYY-MM-DD, HH:mm:ss";
+
 
 //Routine every midnight
 const dailyJob = new CronJob('00 00 00 * * *', function() {
@@ -25,10 +27,12 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 });
 
 //Test routine
-const testJob = new CronJob('*/30 * * * * *', function() {
-	const d = moment();
-	console.log('Month:', d);
-	dbStorage.getNodesDataSpan(14, "2019-11-12 01:58:00", "2019-11-12 02:20:00").then(data => {console.log(data)});
+const testJob = new CronJob('* * * * * *', function() {
+	// dbStorage.getNodesDataSpan(14, "2019-11-12 01:58:00", "2019-11-12 02:20:00")
+	//.then(data => {console.log(data)});
+	var date = moment().format("YYYY-MM-DD");
+	var time = moment().format("HH:mm:ss");
+	console.log(date + " " + time);
 });
 
 module.exports = {
