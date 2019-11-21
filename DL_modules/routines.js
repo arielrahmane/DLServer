@@ -27,7 +27,7 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 });
 
 //Test routine
-var hour = 23;
+var hour = 20;
 var day = 11;
 const testJob = new CronJob('5 * * * * *', function() {
 	var tempA = []; 
@@ -37,6 +37,8 @@ const testJob = new CronJob('5 * * * * *', function() {
 	var humidB = []; 
 	var humidC = []; 
 	var alcohol = []; 
+
+	var currentHour = hour.toString() + ":00:00";
 
 	//var date1 = moment().subtract(0, "days").format("YYYY-MM-DD");
 	//var time1 = moment().subtract(0, "hours").format("HH:mm:ss");
@@ -65,8 +67,18 @@ const testJob = new CronJob('5 * * * * *', function() {
 			humidC.push(data[i].dataValues.humidC);
 			alcohol.push(data[i].dataValues.alcohol); 
 		}
-		alcoholAvg = getAvg(alcohol);
-		console.log("Promedio de tempA: " + alcoholAvg.toFixed(2));
+		tempAAvg = getAvg(tempA).toFixed(2);
+		tempBAvg = getAvg(tempB).toFixed(2);
+		tempCAvg = getAvg(tempC).toFixed(2);
+		humidAAvg = getAvg(humidA).toFixed(2);
+		humidBAvg = getAvg(humidB).toFixed(2);
+		humidCAvg = getAvg(humidC).toFixed(2);
+		alcoholAvg = getAvg(alcohol).toFixed(2);
+
+
+
+		//dbStorage.addNodeHourAv();
+
 	});
 
 	//Output ---> [NodesData: {dataValues}, ]
@@ -74,6 +86,7 @@ const testJob = new CronJob('5 * * * * *', function() {
 
 function getAvg(arr) {
 	var sum = arr.reduce((a,b) => a + b, 0);
+	if (arr.length == 0) return null;
 	return sum/arr.length;
 }
 
