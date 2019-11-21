@@ -113,6 +113,23 @@ function addNodeHourAv(hourAv) {
 	});
 }
 
+function getNodeHourAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesHourAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		});
+	});
+	
+}
+
 function addNodeDailyAv(dailyAv) {
 	DB.NodesDailyAv.create ({
 		nodeID: dailyAv.nodeID,
@@ -240,5 +257,6 @@ module.exports = {
 	addNodeHourAv,
 	addNodeDailyAv,
 	addNodeMonthlyAv,
-	getNodesDataSpan
+	getNodesDataSpan,
+	getNodeHourAv
 }

@@ -29,7 +29,7 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 //Test routine
 var hour = 20;
 var day = 11;
-const testJob = new CronJob('* * * * * *', function() {
+const testJob = new CronJob('*/3 * * * * *', function() {
 	var tempA = []; 
 	var tempB = []; 
 	var tempC = []; 
@@ -61,7 +61,13 @@ const testJob = new CronJob('* * * * * *', function() {
 	console.log(datetime1);
 	console.log(datetime2);
 
-	dbStorage.getNodesDataSpan(requiredNodeID, datetime1, datetime2)
+	dbStorage.getNodeHourAv(14, "2019-11-11 21:00:00", "2019-11-12 03:00:00").then(dataSet => {
+		for(var i = 0; i<dataSet.length; i++) {
+			console.log(dataSet[i].dataValues);
+		}
+	})
+
+	/*dbStorage.getNodesDataSpan(requiredNodeID, datetime1, datetime2)
 	.then(data => {
 		var length = data.length;
 		for (var i = 0; i<length; i++) {
@@ -94,7 +100,7 @@ const testJob = new CronJob('* * * * * *', function() {
 		};
 
 		dbStorage.addNodeHourAv(hourAv);
-	});
+	});*/
 
 	//Output ---> [NodesData: {dataValues}, ]
 });
