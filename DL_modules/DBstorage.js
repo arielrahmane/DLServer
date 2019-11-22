@@ -74,6 +74,8 @@ function getSettings() {
 	return new Promise(function(resolve, reject){
 		DB.Settings.findOne({ where: {id: 1} }).then(settings => {
 			resolve(settings.dataValues);
+		}).catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -82,6 +84,8 @@ function getSystem() {
 	return new Promise(function(resolve, reject){
 		DB.System.findOne({ where: {id: 1} }).then(system => {
 			resolve(system.dataValues);
+		}).catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -125,6 +129,9 @@ function getNodeHourAv(node, fromDate, toDate) {
 		})
 		.then(dataSet => {
 			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
 		});
 	});
 	
@@ -156,6 +163,9 @@ function getNodeDailyAv(node, fromDate, toDate) {
 		})
 		.then(dataSet => {
 			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -186,6 +196,9 @@ function getNodeMonthlyAv(node, fromDate, toDate) {
 		})
 		.then(dataSet => {
 			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -271,7 +284,9 @@ function getNodesDataSpan(node, fromDate, toDate) {
 			}
 		}).then(data => {
 			resolve(data);
-		})
+		}).catch(err => {
+			reject(err);
+		});
 	});
 }
 
