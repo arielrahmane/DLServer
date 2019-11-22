@@ -1,5 +1,8 @@
 const CONFIG = require('../engine/config');
 const DB = require('../src/database');
+const Sequelize = require('sequelize');
+
+const Op = Sequelize.Op;
 
 function createNodeStatus() {
 	deleteTable('NodeStatus');
@@ -71,6 +74,8 @@ function getSettings() {
 	return new Promise(function(resolve, reject){
 		DB.Settings.findOne({ where: {id: 1} }).then(settings => {
 			resolve(settings.dataValues);
+		}).catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -79,6 +84,8 @@ function getSystem() {
 	return new Promise(function(resolve, reject){
 		DB.System.findOne({ where: {id: 1} }).then(system => {
 			resolve(system.dataValues);
+		}).catch(err => {
+			reject(err);
 		});
 	});
 }
@@ -93,6 +100,106 @@ function addNodeData(nodeData) {
 		humidB: nodeData.humidB,
 		humidC: nodeData.humidC,
 		alcohol: nodeData.alcohol
+	});
+}
+
+function addNodeHourAv(hourAv) {
+	DB.NodesHourAv.create ({
+		nodeID: hourAv.nodeID,
+		tempA: hourAv.tempA,
+		tempB: hourAv.tempB,
+		tempC: hourAv.tempC,
+		humidA: hourAv.humidA,
+		humidB: hourAv.humidB,
+		humidC: hourAv.humidC,
+		alcohol: hourAv.alcohol,
+		date: hourAv.date
+	});
+}
+
+function getNodeHourAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesHourAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
+		});
+	});
+	
+}
+
+function addNodeDailyAv(dailyAv) {
+	DB.NodesDailyAv.create ({
+		nodeID: dailyAv.nodeID,
+		tempA: dailyAv.tempA,
+		tempB: dailyAv.tempB,
+		tempC: dailyAv.tempC,
+		humidA: dailyAv.humidA,
+		humidB: dailyAv.humidB,
+		humidC: dailyAv.humidC,
+		alcohol: dailyAv.alcohol,
+		date: dailyAv.date
+	});
+}
+
+function getNodeDailyAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesDailyAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
+		});
+	});
+}
+
+function addNodeMonthlyAv(monthlyAv) {
+	DB.NodesMonthlyAv.create ({
+		nodeID: monthlyAv.nodeID,
+		tempA: monthlyAv.tempA,
+		tempB: monthlyAv.tempB,
+		tempC: monthlyAv.tempC,
+		humidA: monthlyAv.humidA,
+		humidB: monthlyAv.humidB,
+		humidC: monthlyAv.humidC,
+		alcohol: monthlyAv.alcohol,
+		date: monthlyAv.date
+	});
+}
+
+function getNodeMonthlyAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesMonthlyAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		})
+		.catch(err => {
+			reject(err);
+		});
 	});
 }
 
@@ -165,6 +272,24 @@ function getTableCount(tableName) {
 	
 }
 
+
+function getNodesDataSpan(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesData.findAll({
+			where: {
+				nodeID: node,
+				createdAt: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		}).then(data => {
+			resolve(data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+}
+
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
@@ -175,5 +300,12 @@ module.exports = {
 	getSettings,
 	createSystemOnce,
 	updateSystem,
-	getSystem
+	getSystem,
+	addNodeHourAv,
+	addNodeDailyAv,
+	addNodeMonthlyAv,
+	getNodesDataSpan,
+	getNodeHourAv,
+	getNodeDailyAv,
+	getNodeMonthlyAv
 }

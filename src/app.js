@@ -6,6 +6,7 @@ const mysql = require('mysql')
 const Sequelize = require('sequelize');
 const NodeStatusModel = require("../models/nodeStatus");
 const InternetAv = require("../DL_modules/online");
+const routines = require("../DL_modules/routines");
 // const WAP = require('../DL_modules/wap');
 
 const app = express()
@@ -36,5 +37,9 @@ Engine.engine();
 
 //InternetAv.onlineCheck(InternetAv.startTunnel, true);
 //InternetAv.startWAP();
+
+routines.hourJob.start();
+routines.dailyJob.start();
+routines.monthlyJob.start();
 
 module.exports = app;
