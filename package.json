@@ -27,6 +27,7 @@
     "internet-available": "^1.0.0",
     "is-online": "^8.2.0",
     "localtunnel": "^2.0.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
