@@ -74,6 +74,13 @@ const hourJob = new CronJob('0 0 */1 * * *', function() {
 });
 
 //Routine every midnight
+/*
+===> This routine is meant for saving every day, an avarage value of all the data collected by each node.
+===> Therefore, when we want to display, for e.g. the history of node N for a certain week, 
+we wil receive a set of 7 values, representing the average for each day of the week, 
+instead of receiveing thousand of values impossible to display in a chart.
+===> The values are stored in the database "NodesDailyAv".
+*/
 const dailyJob = new CronJob('00 00 00 * * *', function() {
 	var currentDate = moment().subtract(1, "hours").format("YYYY-MM-DD");
 	var passedDate = moment().subtract(1, "days").format("YYYY-MM-DD");
@@ -132,6 +139,13 @@ const dailyJob = new CronJob('00 00 00 * * *', function() {
 });
 
 //Rutine every month
+/*
+===> This routine is meant for saving every month, an avarage value of all the data collected by each node.
+===> Therefore, when we want to display, for e.g. the history of node N for a certain year, 
+we wil receive a set of 12 values, representing the average for each month of the year, 
+instead of receiveing thousand of values impossible to display in a chart.
+===> The values are stored in the database "NodesMonthlyAv".
+*/
 const monthlyJob = new CronJob('0 0 0 1 * *', function() { 
 	var currentDate = moment().subtract(1, "days").format("YYYY-MM-DD");
 	var passedDate = moment().subtract(1, "months").format("YYYY-MM-DD");
