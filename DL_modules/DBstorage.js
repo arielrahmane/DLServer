@@ -144,6 +144,23 @@ function addNodeDailyAv(dailyAv) {
 	});
 }
 
+function getNodeDailyAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesDailyAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		});
+	});
+	
+}
+
 function addNodeMonthlyAv(monthlyAv) {
 	DB.NodesMonthlyAv.create ({
 		nodeID: monthlyAv.nodeID,
