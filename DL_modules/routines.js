@@ -5,19 +5,78 @@ const moment = require('moment');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
 
-//moment.defaultFormat = "YYYY-MM-DD, HH:mm:ss";
+//Rutine every hour
+/*
+===> This routine is meant for saving every hour, an avarage value of all the data collected by each node.
+===> Therefore, when we want to display, for e.g. the history of node N for a certain day, 
+we wil receive a set of 24 values, representing the average for each hour of the day, 
+instead of receiveing thousand of values impossible to display in a chart.
+===> The values are stored in the database "NodesHourAv".
+*/
+const hourJob = new CronJob('0 0 */1 * * *', function() { 
 
+	var currentDate = moment().format("YYYY-MM-DD");
+	var currentTime = moment().format("HH:mm:ss");
+	var passedDate = moment().subtract(1, "hours").format("YYYY-MM-DD");
+	var passedTime = moment().subtract(1, "hours").format("HH:mm:ss");
+
+	var datetime1 = currentDate + " " + currentTime;
+	var datetime2 = passedDate + " " + passedTime;
+
+	async function beginJob(d1, d2) {
+		for (var node = 0; node<16; node++) {
+			await dbStorage.getNodesDataSpan(node, d1, d2)
+			.then(data => {
+				var length = data.length;
+				var tempA = []; 
+				var tempB = []; 
+				var tempC = []; 
+				var humidA = []; 
+				var humidB = []; 
+				var humidC = []; 
+				var alcohol = []; 
+
+				for (var i = 0; i<length; i++) {
+					tempA.push(data[i].dataValues.tempA); 
+					tempB.push(data[i].dataValues.tempB); 
+					tempC.push(data[i].dataValues.tempC); 
+					humidA.push(data[i].dataValues.humidA); 
+					humidB.push(data[i].dataValues.humidB); 
+					humidC.push(data[i].dataValues.humidC);
+					alcohol.push(data[i].dataValues.alcohol); 
+				}
+				tempAAvg = getAvg(tempA);
+				tempBAvg = getAvg(tempB);
+				tempCAvg = getAvg(tempC);
+				humidAAvg = getAvg(humidA);
+				humidBAvg = getAvg(humidB);
+				humidCAvg = getAvg(humidC);
+				alcoholAvg = getAvg(alcohol);
+	
+				var hourAv = {
+					nodeID: node,
+					tempA: tempAAvg,
+					tempB: tempBAvg,
+					tempC: tempCAvg,
+					humidA: humidAAvg,
+					humidB: humidBAvg,
+					humidC: humidCAvg,
+					alcohol: alcoholAvg,
+					date: datetime1
+				};
+	
+				dbStorage.addNodeHourAv(hourAv);
+			});
+		}
+	}
+
+	beginJob(datetime1, datetime2);
+});
 
 //Routine every midnight
 const dailyJob = new CronJob('00 00 00 * * *', function() {
 	const d = moment();
 	console.log('Midnight:', d);
-});
-
-//Rutine every hour
-const hourJob = new CronJob('0 0 */1 * * *', function() {
-	const d = moment();
-	console.log('Hour:', d);
 });
 
 //Rutine every month
@@ -26,95 +85,15 @@ const monthJob = new CronJob('0 0 0 1 * *', function() {
 	console.log('Month:', d);
 });
 
-//Test routine
-var hour = 20;
-var day = 11;
-const testJob = new CronJob('*/3 * * * * *', function() {
-	var tempA = []; 
-	var tempB = []; 
-	var tempC = []; 
-	var humidA = []; 
-	var humidB = []; 
-	var humidC = []; 
-	var alcohol = []; 
-
-	//var date1 = moment().subtract(0, "days").format("YYYY-MM-DD");
-	//var time1 = moment().subtract(0, "hours").format("HH:mm:ss");
-	var stringHour = (hour < 10) ? "0" + hour.toString() : hour.toString();
-	var date1 = "2019-11-" + day.toString();
-	var time1 = stringHour + ":00:00";
-	var datetime1 = date1 + " " + time1;
-
-	hour++;
-	if (hour > 23) {
-		hour = 0;
-		day++; //Cuidado con pasarse de fechas permitidas
-	};
-
-	stringHour = (hour < 10) ? "0" + hour.toString() : hour.toString();
-	var date2 = "2019-11-" + day.toString();
-	var time2 = stringHour + ":00:00";
-	var datetime2 = date2 + " " + time2;
-
-	var requiredNodeID = 3;
-
-	console.log(datetime1);
-	console.log(datetime2);
-
-	dbStorage.getNodeHourAv(14, "2019-11-11 21:00:00", "2019-11-12 03:00:00").then(dataSet => {
-		for(var i = 0; i<dataSet.length; i++) {
-			console.log(dataSet[i].dataValues);
-		}
-	})
-
-	/*dbStorage.getNodesDataSpan(requiredNodeID, datetime1, datetime2)
-	.then(data => {
-		var length = data.length;
-		for (var i = 0; i<length; i++) {
-			tempA.push(data[i].dataValues.tempA); 
-			tempB.push(data[i].dataValues.tempB); 
-			tempC.push(data[i].dataValues.tempC); 
-			humidA.push(data[i].dataValues.humidA); 
-			humidB.push(data[i].dataValues.humidB); 
-			humidC.push(data[i].dataValues.humidC);
-			alcohol.push(data[i].dataValues.alcohol); 
-		}
-		tempAAvg = getAvg(tempA);
-		tempBAvg = getAvg(tempB);
-		tempCAvg = getAvg(tempC);
-		humidAAvg = getAvg(humidA);
-		humidBAvg = getAvg(humidB);
-		humidCAvg = getAvg(humidC);
-		alcoholAvg = getAvg(alcohol);
-
-		var hourAv = {
-			nodeID: requiredNodeID,
-			tempA: tempAAvg,
-			tempB: tempBAvg,
-			tempC: tempCAvg,
-			humidA: humidAAvg,
-			humidB: humidBAvg,
-			humidC: humidCAvg,
-			alcohol: alcoholAvg,
-			date: datetime1
-		};
-
-		dbStorage.addNodeHourAv(hourAv);
-	});*/
-
-	//Output ---> [NodesData: {dataValues}, ]
-});
-
 function getAvg(arr) {
-	var sum = arr.reduce((a,b) => a + b, 0);
 	if (arr.length == 0) return null;
+	var sum = arr.reduce((a,b) => a + b, 0);
 	var avg = (sum/arr.length).toFixed(2);
 	return avg;
 }
 
 module.exports = {
-    dailyJob,
     hourJob,
-	monthJob,
-	testJob
+    dailyJob,
+	monthJob
 }

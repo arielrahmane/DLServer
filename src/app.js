@@ -38,6 +38,6 @@ Engine.engine();
 //InternetAv.onlineCheck(InternetAv.startTunnel, true);
 //InternetAv.startWAP();
 
-routines.testJob.start();
+routines.hourJob.start();
 
 module.exports = app;
