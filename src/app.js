@@ -39,5 +39,7 @@ Engine.engine();
 //InternetAv.startWAP();
 
 routines.hourJob.start();
+routines.dailyJob.start();
+routines.monthlyJob.start();
 
 module.exports = app;

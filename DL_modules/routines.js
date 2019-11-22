@@ -132,9 +132,61 @@ const dailyJob = new CronJob('00 00 00 * * *', function() {
 });
 
 //Rutine every month
-const monthJob = new CronJob('0 0 0 1 * *', function() {
-	const d = moment();
-	console.log('Month:', d);
+const monthlyJob = new CronJob('0 0 0 1 * *', function() { 
+	var currentDate = moment().subtract(1, "days").format("YYYY-MM-DD");
+	var passedDate = moment().subtract(1, "months").format("YYYY-MM-DD");
+
+	var datetime2 = currentDate;
+	var datetime1 = passedDate;
+
+	beginJob(datetime1, datetime2);
+
+	async function beginJob(d1, d2) {
+		for (var node = 0; node<16; node++) {
+			await dbStorage.getNodeDailyAv(node, d1, d2)
+			.then(data => {
+				var length = data.length;
+				var tempA = []; 
+				var tempB = []; 
+				var tempC = []; 
+				var humidA = []; 
+				var humidB = []; 
+				var humidC = []; 
+				var alcohol = []; 
+
+				for (var i = 0; i<length; i++) {
+					tempA.push(data[i].dataValues.tempA); 
+					tempB.push(data[i].dataValues.tempB); 
+					tempC.push(data[i].dataValues.tempC); 
+					humidA.push(data[i].dataValues.humidA); 
+					humidB.push(data[i].dataValues.humidB); 
+					humidC.push(data[i].dataValues.humidC);
+					alcohol.push(data[i].dataValues.alcohol); 
+				}
+				tempAAvg = getAvg(tempA);
+				tempBAvg = getAvg(tempB);
+				tempCAvg = getAvg(tempC);
+				humidAAvg = getAvg(humidA);
+				humidBAvg = getAvg(humidB);
+				humidCAvg = getAvg(humidC);
+				alcoholAvg = getAvg(alcohol);
+	
+				var monthlyAv = {
+					nodeID: node,
+					tempA: tempAAvg,
+					tempB: tempBAvg,
+					tempC: tempCAvg,
+					humidA: humidAAvg,
+					humidB: humidBAvg,
+					humidC: humidCAvg,
+					alcohol: alcoholAvg,
+					date: datetime1
+				};
+	
+				dbStorage.addNodeMonthlyAv(monthlyAv);
+			});
+		}
+	}
 });
 
 function getAvg(arr) {
@@ -147,5 +199,5 @@ function getAvg(arr) {
 module.exports = {
     hourJob,
     dailyJob,
-	monthJob
+	monthlyJob
 }

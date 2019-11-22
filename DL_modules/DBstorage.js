@@ -290,5 +290,7 @@ module.exports = {
 	addNodeDailyAv,
 	addNodeMonthlyAv,
 	getNodesDataSpan,
-	getNodeHourAv
+	getNodeHourAv,
+	getNodeDailyAv,
+	getNodeMonthlyAv
 }
