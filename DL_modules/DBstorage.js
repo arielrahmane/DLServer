@@ -158,7 +158,6 @@ function getNodeDailyAv(node, fromDate, toDate) {
 			resolve(dataSet);
 		});
 	});
-	
 }
 
 function addNodeMonthlyAv(monthlyAv) {
@@ -172,6 +171,22 @@ function addNodeMonthlyAv(monthlyAv) {
 		humidC: monthlyAv.humidC,
 		alcohol: monthlyAv.alcohol,
 		date: monthlyAv.date
+	});
+}
+
+function getNodeMonthlyAv(node, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesMonthlyAv.findAll({ 
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		})
+		.then(dataSet => {
+			resolve(dataSet);
+		});
 	});
 }
 
