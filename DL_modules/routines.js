@@ -13,7 +13,7 @@ we wil receive a set of 24 values, representing the average for each hour of the
 instead of receiveing thousand of values impossible to display in a chart.
 ===> The values are stored in the database "NodesHourAv".
 */
-const hourJob = new CronJob('0 * * * * *', function() { //0 0 */1 * * *
+const hourJob = new CronJob('0 0 */1 * * *', function() {
 
 	var currentDate = moment().format("YYYY-MM-DD");
 	var currentTime = moment().format("HH:mm:ss");
