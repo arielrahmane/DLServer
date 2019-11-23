@@ -30,15 +30,6 @@ function getNodesDataSet(node, field, params, res) {
 		var toDate = params.toDate;
 
 		switch (timeSpan) {
-			case "minutes":
-				DBStorage.getVariableSpan(NodesData, node, field, fromDate, toDate)
-				.then(dataSet => {
-					res.send(dataSet);
-				})
-				.catch(err => {
-					res.status(400).send(err);
-				});
-				break;
 			case "hours":
 				DBStorage.getVariableSpan(NodesHourAv, node, field, fromDate, toDate)
 				.then(dataSet => {
@@ -57,7 +48,7 @@ function getNodesDataSet(node, field, params, res) {
 					res.status(400).send(err);
 				});
 				break;
-			case "days":
+			case "months":
 				DBStorage.getVariableSpan(NodesMonthlyAv, node, field, fromDate, toDate)
 				.then(dataSet => {
 					res.send(dataSet);
@@ -75,7 +66,10 @@ function getNodesDataSet(node, field, params, res) {
 module.exports = app => {
 	/* 
 		/nodes/:node/history/:field?timeSpan=days&fromDate="2019-11-11 12:00:00"&toDate="2019-11-12 12:00:00"
-		timeSpan = [minutes, hours, days, months] (possible values)
+		node = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+		field = [tempA, tempB, tempC, humidA, humidB, humidC, alcohol]
+		timeSpan = [hours, days, months] (possible values)
+		fromDate & toDate format = "YYYY-MM-DD HH:mm:ss"
 	*/
 	app.get('/nodes/:node/history/:field', (req, res) => {
 		var node = req.params.node;
