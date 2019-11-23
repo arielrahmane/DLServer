@@ -296,7 +296,7 @@ function getVariableSpan(database, node, variable, fromDate, toDate) {
 			attributes: [variable, 'date'],
 			where: {
 				nodeID: node,
-				createdAt: {
+				date: {
 					[Op.between]: [fromDate, toDate]
 				  }
 			}
