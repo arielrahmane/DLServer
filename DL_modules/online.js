@@ -94,18 +94,20 @@ async function initTunnel(ltSubdomain, retryNumb) {
 }
 
 async function initTunnel2(ngrokSubdomain, retryNumb) {
-    console.log("Entry 1");
-    await ngrok.connect(8081, (err, url) => {  
-        if (err) {
-            console.error('Error while connecting Ngrok',err);
-            return new Error('Ngrok Failed');
-        } else {
-            console.log('Tunnel Created -> ', url);
-            console.log('Tunnel Inspector ->  http://127.0.0.1:4040');
-    }
-    }).then(done => {console.log(done)}).catch(err => {console.log(err)});
+    await ngrok.connect({
+        addr: 8081,
+        onStatusChange: status => {console.log(status);}
+    }).then(done => {
+        console.log(done);
+        FLAG.setTunnel(done);
+        console.log(FLAG.getTunnel());
+        ngrok.disconnect(FLAG.getTunnel())
+        .then(() => {console.log("Ngrok service disconnected.");})
+        .catch(() => {console.log("Error in disconnecting ngrok service.");})
+    }).catch(err => {
+        console.log(err)
+    });
 }
-
 
 module.exports = {
     onlineCheck,
