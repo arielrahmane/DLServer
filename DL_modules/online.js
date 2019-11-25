@@ -100,17 +100,31 @@ async function initTunnel2(ngrokSubdomain, retryNumb) {
     }).then(done => {
         console.log(done);
         FLAG.setTunnel(done);
-        console.log(FLAG.getTunnel());
-        ngrok.disconnect(FLAG.getTunnel())
-        .then(() => {console.log("Ngrok service disconnected.");})
-        .catch(() => {console.log("Error in disconnecting ngrok service.");})
     }).catch(err => {
         console.log(err)
     });
 }
 
+function closeTunnel(service) {
+    switch (service) {
+        case "lt":
+            FLAG.getTunnel().close();
+            break;
+        case "ngrok":
+            ngrok.disconnect(FLAG.getTunnel())
+            .then(() => {console.log("Ngrok service disconnected.");})
+            .catch(() => {console.log("Error in disconnecting ngrok service.");});
+            break;
+        default:
+            FLAG.getTunnel().close();
+            ngrok.disconnect();
+            break;
+    }
+}
+
 module.exports = {
     onlineCheck,
     startTunnel,
-    startWAP
+    startWAP,
+    closeTunnel
 }
