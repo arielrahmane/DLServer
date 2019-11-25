@@ -1,4 +1,5 @@
 const localtunnel = require('localtunnel');
+const ngrok = require('ngrok');
 const isOnline = require('is-online');
 const { exec } = require('child_process');
 const FLAG = require('../engine/modules/flags');
@@ -57,7 +58,8 @@ function onlineCheck(callback, retry) {
 function startTunnel() {
     DBStorage.getSystem().then(system => {
         var ltSubdomain = system.ltSubdomain;
-        initTunnel(ltSubdomain, 0);
+        //initTunnel(ltSubdomain, 0);
+        initTunnel2(ltSubdomain, 0);
     })
 }
 
@@ -87,13 +89,42 @@ async function initTunnel(ltSubdomain, retryNumb) {
       console.log("TUNNEL IS CLOSED");
     });
     FLAG.getTunnel().on('error', () => {
-      console.log("TUNNEL ERROR: " + err);
+      console.log("TUNNEL ERROR");
     });
-  }
+}
 
+async function initTunnel2(ngrokSubdomain, retryNumb) {
+    await ngrok.connect({
+        addr: 8081,
+        onStatusChange: status => {console.log(status);}
+    }).then(done => {
+        console.log(done);
+        FLAG.setTunnel(done);
+    }).catch(err => {
+        console.log(err)
+    });
+}
+
+function closeTunnel(service) {
+    switch (service) {
+        case "lt":
+            FLAG.getTunnel().close();
+            break;
+        case "ngrok":
+            ngrok.disconnect(FLAG.getTunnel())
+            .then(() => {console.log("Ngrok service disconnected.");})
+            .catch(() => {console.log("Error in disconnecting ngrok service.");});
+            break;
+        default:
+            FLAG.getTunnel().close();
+            ngrok.disconnect();
+            break;
+    }
+}
 
 module.exports = {
     onlineCheck,
     startTunnel,
-    startWAP
+    startWAP,
+    closeTunnel
 }
