@@ -290,6 +290,24 @@ function getNodesDataSpan(node, fromDate, toDate) {
 	});
 }
 
+function getVariableSpan(database, node, variable, fromDate, toDate) {
+	return new Promise(function(resolve, reject) {
+		database.findAll({
+			attributes: [variable, 'date'],
+			where: {
+				nodeID: node,
+				date: {
+					[Op.between]: [fromDate, toDate]
+				  }
+			}
+		}).then(data => {
+			resolve(data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+}
+
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
@@ -307,5 +325,6 @@ module.exports = {
 	getNodesDataSpan,
 	getNodeHourAv,
 	getNodeDailyAv,
-	getNodeMonthlyAv
+	getNodeMonthlyAv,
+	getVariableSpan
 }

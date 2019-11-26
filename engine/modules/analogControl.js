@@ -56,7 +56,7 @@ module.exports.analogctl = function () {
                     console.log("Button pushed for 3 seconds. Proceed to connect.");
                     inernetLedBlink = setInterval(blink, 500, internetConnectionLed);
                     if (FLAG.getTunnel()) {
-                        InternetAv.closeTunnel("lt");
+                        InternetAv.closeTunnel(FLAG.getTunnelService());
                     };
                     InternetAv.startWAP()
                     .then( (val) => {
