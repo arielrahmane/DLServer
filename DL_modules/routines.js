@@ -65,7 +65,7 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 
 function fakeDB() { 
 	var currentDate = moment().subtract(1, "days");
-	var passedDate = moment().subtract(1, "years");
+	var passedDate = moment().subtract(3, "years");
 
 	var minTemp = 20.0;
 	var maxTemp = 40.0;
@@ -112,7 +112,7 @@ function fakeDB() {
 		refHumid = parseFloat(refHumid).toFixed(2);
 		refAlcohol = parseFloat(refAlcohol).toFixed(2);
 
-		var hourAvg = {
+		var monthlyAvg = {
 			nodeID: 14,
 			tempA: refTemp,
 			tempB: refTemp,
@@ -124,13 +124,13 @@ function fakeDB() {
 			date: passedDate.format("YYYY-MM-DD HH:mm:ss")
 		}
 
-		dbStorage.addNodeHourAv(hourAvg);
+		dbStorage.addNodeMonthlyAv(monthlyAvg);
 
 		tempA_p = parseFloat(refTemp); 
 		humidA_p = parseFloat(refHumid); 
 		alcohol_p = parseFloat(refAlcohol); 
 
-		passedDate = passedDate.add(1, "hours");
+		passedDate = passedDate.add(1, "months");
 	};
 }
 

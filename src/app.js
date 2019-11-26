@@ -42,8 +42,8 @@ routines.hourJob.start();
 routines.dailyJob.start();
 routines.monthlyJob.start();
 
-setTimeout(() => {
+/*setTimeout(() => {
 	routines.fakeDB();
-}, 20000);
+}, 20000);*/
 
 module.exports = app;

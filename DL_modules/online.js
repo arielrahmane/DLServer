@@ -58,8 +58,8 @@ function onlineCheck(callback, retry) {
 function startTunnel() {
     DBStorage.getSystem().then(system => {
         var ltSubdomain = system.ltSubdomain;
-        //initTunnel(ltSubdomain, 0);
-        initTunnel2(ltSubdomain, 0);
+        initTunnel(ltSubdomain, 0);
+        //initTunnel2(ltSubdomain, 0);
     })
 }
 
@@ -82,6 +82,7 @@ async function initTunnel(ltSubdomain, retryNumb) {
         retryTunnel(retryNumb+1);
     };
     FLAG.setTunnel(tunnel);
+    FLAG.setTunnelService("lt");
     // the assigned public url for your tunnel
     // i.e. https://abcdefgjhij.localtunnel.me
    
@@ -100,6 +101,7 @@ async function initTunnel2(ngrokSubdomain, retryNumb) {
     }).then(done => {
         console.log(done);
         FLAG.setTunnel(done);
+        FLAG.setTunnelService("ngrok");
     }).catch(err => {
         console.log(err)
     });
