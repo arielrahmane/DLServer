@@ -63,6 +63,77 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 	beginJob(datetime1, datetime2, dbStorage.getNodeDailyAv, dbStorage.addNodeMonthlyAv);
 });
 
+function fakeDB() { 
+	var currentDate = moment().subtract(1, "days");
+	var passedDate = moment().subtract(1, "years");
+
+	var minTemp = 20.0;
+	var maxTemp = 40.0;
+	var minHumid = 0.0;
+	var maxHumid = 100.0;
+	var minalcohol = 0.0;
+	var maxalcohol = 20.0;
+
+	var tempA_p = 20.0; 
+	var humidA_p = 60.0; 
+	var alcohol_p = 5.0; 
+	while (currentDate.diff(passedDate, 'days') > 0) {
+
+		if (passedDate.month() <= 4 || passedDate.month() >= 10) {
+			minTemp = 20.0;
+			maxTemp = 40.0;
+			minHumid = 40.0;
+			maxHumid = 100.0;
+		} else {
+			minTemp = 0.0;
+			maxTemp = 20.0;
+			minHumid = 0.0;
+			maxHumid = 80.0;
+		}
+		var multipTemp = (tempA_p-minTemp < 3.0 || maxTemp-tempA_p < 3.0) ? 1.13 : 0.31;
+		var multipHumid = (humidA_p-minHumid < 6.0 || maxHumid-humidA_p < 6.0) ? 3.2 : 1.1;
+		var multipAlcohol = (alcohol_p-minalcohol < 2.0 || maxalcohol-alcohol_p < 2) ? 0.91 : 0.11;
+		var rand = Math.floor(Math.random()*10);
+		var sign = parseFloat(Math.sign(rand-4));
+
+		if (tempA_p-minTemp < 3.0) {sign=1.0; multipTemp = multipTemp*(-1.0)};
+		if (maxTemp-tempA_p < 3.0) {sign=-1.0;multipTemp = multipTemp*(-1.0)};
+		var refTemp = tempA_p + sign - multipTemp*sign;
+
+		if (humidA_p-minHumid < 6.0) {sign=1.0; multipHumid = multipHumid*(-1.0)};
+		if (maxHumid-humidA_p < 6.0) {sign=-1.0;multipHumid = multipHumid*(-1.0)};
+		var refHumid = humidA_p + sign*5 - multipHumid*sign;
+
+		if (alcohol_p-minalcohol < 2.0) {sign=1.0; multipAlcohol = multipAlcohol*(-1.0)};
+		if (maxalcohol-alcohol_p < 2.0) {sign=-1.0;multipAlcohol = multipAlcohol*(-1.0)};
+		var refAlcohol = alcohol_p + sign*0.5 - multipAlcohol*sign;
+
+		refTemp = parseFloat(refTemp).toFixed(2);
+		refHumid = parseFloat(refHumid).toFixed(2);
+		refAlcohol = parseFloat(refAlcohol).toFixed(2);
+
+		var hourAvg = {
+			nodeID: 14,
+			tempA: refTemp,
+			tempB: refTemp,
+			tempC: refTemp,
+			humidA: refHumid,
+			humidB: refHumid,
+			humidC: refHumid,
+			alcohol: refAlcohol,
+			date: passedDate.format("YYYY-MM-DD HH:mm:ss")
+		}
+
+		dbStorage.addNodeHourAv(hourAvg);
+
+		tempA_p = parseFloat(refTemp); 
+		humidA_p = parseFloat(refHumid); 
+		alcohol_p = parseFloat(refAlcohol); 
+
+		passedDate = passedDate.add(1, "hours");
+	};
+}
+
 async function beginJob(d1, d2, funcGet, funcSet) {
 	for (var node = 0; node<16; node++) {
 		await funcGet(node, d1, d2)
@@ -123,5 +194,6 @@ function getAvg(arr) {
 module.exports = {
     hourJob,
     dailyJob,
-	monthlyJob
+	monthlyJob,
+	fakeDB
 }
