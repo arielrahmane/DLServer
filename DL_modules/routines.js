@@ -2,6 +2,7 @@
 
 const CronJob = require('cron').CronJob;
 const moment = require('moment');
+const XLSX = require('xlsx');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
 
@@ -62,6 +63,62 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 
 	beginJob(datetime1, datetime2, dbStorage.getNodeDailyAv, dbStorage.addNodeMonthlyAv);
 });
+
+/*
+	Format of the output from the DB request:
+	[
+		NodesData: {
+			dataValues: {
+				id: Integer,
+				tempA: float,
+				tempB: float,
+				tempC: float,
+				humidA: float,
+				humidB: float,
+				humidC: float,
+				alcohol: float,
+				createdAt: Date, -----> (YYYY-MM-DD HH:mm:ss)
+				updatedAt: Date  -----> (YYYY-MM-DD HH:mm:ss)
+			}
+		}
+	]
+ */
+var wb = XLSX.utils.book_new();
+var ws = new Object();
+function csv() {
+	var jsonArray = [];
+	const fields = ['id', 'nodeID', 
+					'tempA', 'tempB', 'tempC', 
+					'humidA', 'humidB', 'humidC', 
+					'alcohol', 'createdAt', 'updatedAt'];
+	dbStorage.getNodesDataSpan(7, "2019-11-11 22:30:00", "2019-11-11 22:31:00")
+	.then(dataSet => {
+		for (var i=0; i<dataSet.length; i++) {
+			var idata = dataSet[i].dataValues;
+			jsonArray.push(idata);
+		};
+		var ws_aux = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
+		ws = ws_aux;
+	})
+	.catch(err => {
+		console.log(err);
+	});
+	dbStorage.getNodesDataSpan(14, "2019-11-11 22:30:00", "2019-11-11 22:31:00")
+	.then(dataSet => {
+		for (var i=0; i<dataSet.length; i++) {
+			var idata = dataSet[i].dataValues;
+			jsonArray.push(idata);
+		};
+		XLSX.utils.sheet_add_json(ws, jsonArray, {header: fields, skipHeader: true, origin: -1});
+	})
+	.catch(err => {
+		console.log(err);
+	});
+	setTimeout(() => {
+		XLSX.utils.book_append_sheet(wb, ws, 'out.xlsx');
+		XLSX.writeFile(wb, 'out.xlsx');
+	}, 5000);
+}
 
 function fakeDB() { 
 	var currentDate = moment().subtract(1, "days");
@@ -195,5 +252,6 @@ module.exports = {
     hourJob,
     dailyJob,
 	monthlyJob,
-	fakeDB
+	fakeDB,
+	csv
 }

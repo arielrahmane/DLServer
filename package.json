@@ -26,6 +26,7 @@
     "express": "^4.17.1",
     "internet-available": "^1.0.0",
     "is-online": "^8.2.0",
+    "json2csv": "^4.5.4",
     "localtunnel": "^2.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -38,6 +39,7 @@
     "raspi": "^6.0.1",
     "raspi-serial": "^5.1.2",
     "sequelize": "^5.19.6",
-    "serialport": "^7.1.5"
+    "serialport": "^7.1.5",
+    "xlsx": "^0.15.2"
   }
 }
