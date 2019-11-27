@@ -272,6 +272,23 @@ function getTableCount(tableName) {
 	
 }
 
+function getNodeDataForCSV(fromID, toID, node) {
+	return new Promise(function(resolve, reject) {
+		DB.NodesData.findAll({
+			where: {
+				id: {
+					[Op.between]: [fromID, toID]
+				  },
+				nodeID: node
+			}
+		}).then(data => {
+			resolve(data);
+		}).catch(err => {
+			reject(err);
+		});
+	});
+}
+
 
 function getNodesDataSpan(node, fromDate, toDate) {
 	return new Promise(function(resolve, reject) {
@@ -326,5 +343,6 @@ module.exports = {
 	getNodeHourAv,
 	getNodeDailyAv,
 	getNodeMonthlyAv,
-	getVariableSpan
+	getVariableSpan,
+	getNodeDataForCSV
 }

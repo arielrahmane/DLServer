@@ -3,6 +3,7 @@
 const CronJob = require('cron').CronJob;
 const moment = require('moment');
 const XLSX = require('xlsx');
+const _ = require('lodash');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
 
@@ -83,37 +84,50 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 		}
 	]
  */
-var wb = XLSX.utils.book_new();
-wb.Props = {
-	Title: "SheetJS Test",
-	Subject: "Test",
-	Author: "Ariel Rahmane",
-	CreatedDate: moment()
-};
-wb.SheetNames.push("Test Sheet 1");
-function csv() {
-	var jsonArray = [];
+
+async function csv() {
+	var wb = XLSX.utils.book_new();
+	wb.Props = {
+		Title: "Data Nodos",
+		Subject: "Data Nodos",
+		Author: "OpenDL",
+		CreatedDate: moment()
+	};
 	const fields = ['id', 'nodeID', 
 					'tempA', 'tempB', 'tempC', 
 					'humidA', 'humidB', 'humidC', 
 					'alcohol', 'createdAt', 'updatedAt'];
-	dbStorage.getNodesDataSpan(7, "2019-11-11 22:30:00", "2019-11-11 22:31:00")
-	.then(dataSet => {
-		for (var i=0; i<dataSet.length; i++) {
-			var idata = dataSet[i].dataValues;
-			jsonArray.push(idata);
+	for (var node=0; node<16; node++) {
+		var finished = false;
+		var currentSheet = "Nodo " + String(node);
+		wb.SheetNames.push(currentSheet);
+		wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet([{}], {header: fields});
+		var fromID = 0;
+		var toID = 499;
+		while(!finished) {
+			await dbStorage.getNodeDataForCSV(fromID, toID, node)
+			.then(dataSet => {
+				console.log("Got the dataSet of node " + node + " with length = " + dataSet.length);
+				if (_.isEmpty(dataSet)) finished = true;
+				else {
+					var jsonArray = [];
+					for (var i=0; i<dataSet.length; i++) {
+						var idata = dataSet[i].dataValues;
+						jsonArray.push(idata);
+					};
+					console.log("AGREGANDO DATA DE: " + jsonArray.length);
+					XLSX.utils.sheet_add_json(wb.Sheets[currentSheet], jsonArray, {origin: -1, skipHeader: true});
+				}
+			})
+			.catch(err => {
+				console.log(err);
+			})
+			fromID = fromID + 500;
+			toID = toID + 500;
 		};
-		wb.Sheets["Test Sheet 1"] = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
-	})
-	.catch(err => {
-		console.log(err);
-	});
-	setTimeout(() => {
-		XLSX.utils.sheet_add_json(wb.Sheets["Test Sheet 1"], jsonArray, {origin: -1, skipHeader: true});
-		console.log("Agregando a archivo...");
-		//XLSX.utils.book_append_sheet(wb, ws, 'out.xlsx');
-		XLSX.writeFile(wb, 'out.xlsx');
-	}, 5000);
+	};
+	console.log("Agregando a archivo...");
+	XLSX.writeFile(wb, 'nodos_data.xlsx');
 }
 
 function fakeDB() { 
