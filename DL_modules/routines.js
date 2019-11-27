@@ -84,7 +84,13 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 	]
  */
 var wb = XLSX.utils.book_new();
-var ws = new Object();
+wb.Props = {
+	Title: "SheetJS Test",
+	Subject: "Test",
+	Author: "Ariel Rahmane",
+	CreatedDate: moment()
+};
+wb.SheetNames.push("Test Sheet 1");
 function csv() {
 	var jsonArray = [];
 	const fields = ['id', 'nodeID', 
@@ -97,25 +103,15 @@ function csv() {
 			var idata = dataSet[i].dataValues;
 			jsonArray.push(idata);
 		};
-		var ws_aux = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
-		ws = ws_aux;
-	})
-	.catch(err => {
-		console.log(err);
-	});
-	dbStorage.getNodesDataSpan(14, "2019-11-11 22:30:00", "2019-11-11 22:31:00")
-	.then(dataSet => {
-		for (var i=0; i<dataSet.length; i++) {
-			var idata = dataSet[i].dataValues;
-			jsonArray.push(idata);
-		};
-		XLSX.utils.sheet_add_json(ws, jsonArray, {header: fields, skipHeader: true, origin: -1});
+		wb.Sheets["Test Sheet 1"] = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
 	})
 	.catch(err => {
 		console.log(err);
 	});
 	setTimeout(() => {
-		XLSX.utils.book_append_sheet(wb, ws, 'out.xlsx');
+		XLSX.utils.sheet_add_json(wb.Sheets["Test Sheet 1"], jsonArray, {origin: -1, skipHeader: true});
+		console.log("Agregando a archivo...");
+		//XLSX.utils.book_append_sheet(wb, ws, 'out.xlsx');
 		XLSX.writeFile(wb, 'out.xlsx');
 	}, 5000);
 }
