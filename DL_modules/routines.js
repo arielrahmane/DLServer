@@ -135,10 +135,9 @@ async function csv(callback) {
 		};
 	};
 	console.log("Agregando a archivo...");
-	XLSX.writeFile(wb, fileOut);
-	setTimeout(() => {
+	XLSX.writeFileAsync(fileOut, wb, () => {
 		callback(fileOut, fileOutPath);
-	}, 10000);
+	});
 }
 
 function fakeDB() { 
