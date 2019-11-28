@@ -6,6 +6,7 @@ const XLSX = require('xlsx');
 const _ = require('lodash');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
+const mail = require('./mail');
 
 //Rutine every hour
 /*
@@ -134,6 +135,9 @@ async function csv() {
 	};
 	console.log("Agregando a archivo...");
 	XLSX.writeFile(wb, 'nodos_data.xlsx');
+	setTimeout(() => {
+		mail.sendEmail();
+	}, 3000);
 }
 
 function fakeDB() { 
