@@ -101,9 +101,10 @@ async function csv() {
 		var finished = false;
 		var currentSheet = "Nodo " + String(node);
 		wb.SheetNames.push(currentSheet);
-		wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet([{}], {header: fields});
+		//wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet([{}], {header: fields});
 		var fromID = 0;
 		var toID = 499;
+		var firstNodeIteration = true;
 		while(!finished) {
 			await dbStorage.getNodeDataForCSV(fromID, toID, node)
 			.then(dataSet => {
@@ -116,7 +117,12 @@ async function csv() {
 						jsonArray.push(idata);
 					};
 					console.log("AGREGANDO DATA DE: " + jsonArray.length);
-					XLSX.utils.sheet_add_json(wb.Sheets[currentSheet], jsonArray, {origin: -1, skipHeader: true});
+					if (firstNodeIteration) {
+						wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
+						firstNodeIteration = false;
+					} else {
+						XLSX.utils.sheet_add_json(wb.Sheets[currentSheet], jsonArray, {origin: -1, skipHeader: true});
+					}
 				}
 			})
 			.catch(err => {
