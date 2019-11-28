@@ -6,7 +6,6 @@ const XLSX = require('xlsx');
 const _ = require('lodash');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
-const mail = require('./mail');
 
 //Rutine every hour
 /*
@@ -86,7 +85,7 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 	]
  */
 
-async function csv() {
+async function csv(callback) {
 	var wb = XLSX.utils.book_new();
 	wb.Props = {
 		Title: "Data Nodos",
@@ -94,6 +93,8 @@ async function csv() {
 		Author: "OpenDL",
 		CreatedDate: moment()
 	};
+	var fileOut = 'data_nodos.xlsx';
+	var fileOutPath = '/home/pi/Documents/DLServer/' + fileOut;
 	const fields = ['id', 'nodeID', 
 					'tempA', 'tempB', 'tempC', 
 					'humidA', 'humidB', 'humidC', 
@@ -134,10 +135,10 @@ async function csv() {
 		};
 	};
 	console.log("Agregando a archivo...");
-	XLSX.writeFile(wb, 'nodos_data.xlsx');
+	XLSX.writeFile(wb, fileOut);
 	setTimeout(() => {
-		mail.sendEmail();
-	}, 3000);
+		callback(fileOut, fileOutPath);
+	}, 10000);
 }
 
 function fakeDB() { 

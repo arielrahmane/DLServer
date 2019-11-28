@@ -1,38 +1,37 @@
 const nodemailer = require ('nodemailer');
 
-function sendEmail() {
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-               user: 'setEmail', //need to address security problems first
-               pass: 'setPassword'
-           }
+function sendEmail(service, user, pass, from, to, fileName, filePath) {
+    return new Promise(function(resolve, reject) {
+        var transporter = nodemailer.createTransport({
+            service: service,
+            auth: {
+                   user: user, //need to address security problems first
+                   pass: pass
+               }
+        });
+    
+        const mailOptions = {
+            from: from, // sender address
+            to: to, // list of receivers
+            subject: 'OpenDL Data Excel', // Subject line
+            html: '<p>Adjunto se encuentra el archivo Excel con los datos de todos los nodos.</p>', // plain text body
+            attachments: [
+                {
+                    filename: fileName,
+                    path: filePath // stream this file
+                }
+            ]
+          };
+      
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, function (err, info) {
+            if (err)
+                reject(err);
+            else
+                resolve(info);
+        });
     });
-
-    const mailOptions = {
-        from: 'arielrahmane@gmail.com', // sender address
-        to: 'arielrahmane@gmail.com', // list of receivers
-        subject: 'Test Excel OpenDL', // Subject line
-        html: '<p>Esto es un test de OpenDL</p>', // plain text body
-        attachments: [
-            {
-                filename: 'nodos_data.xlsx',
-                path: '/home/pi/Documents/DLServer/nodos_data.xlsx' // stream this file
-            }
-        ]
-      };
-  
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function (err, info) {
-        if (err)
-            console.log(err);
-        else
-            console.log(info);
-    });
-
-  }
-
+}
   module.exports = {
     sendEmail
 }
