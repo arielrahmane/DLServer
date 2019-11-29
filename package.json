@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "cron": "^1.7.2",
     "express": "^4.17.1",
+    "googleapis": "^45.0.0",
     "internet-available": "^1.0.0",
     "is-online": "^8.2.0",
     "json2csv": "^4.5.4",

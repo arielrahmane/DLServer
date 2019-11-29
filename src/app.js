@@ -42,4 +42,11 @@ routines.hourJob.start();
 routines.dailyJob.start();
 routines.monthlyJob.start();
 
+setTimeout(() => {
+	routines.csv((a, b) => {
+		console.log(a + " " + b);
+	})
+}, 3000);
+
+
 module.exports = app;

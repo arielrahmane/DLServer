@@ -6,6 +6,7 @@ const XLSX = require('xlsx');
 const _ = require('lodash');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
+const mail = require('./mail');
 
 //Rutine every hour
 /*
@@ -137,6 +138,19 @@ async function csv(callback) {
 	console.log("Agregando a archivo...");
 	XLSX.writeFileAsync(fileOut, wb, () => {
 		callback(fileOut, fileOutPath);
+		var parameters = {
+			service: "gmail",
+			to: "arielrahmane@gmail.com",
+			fileName: fileOut,
+			filePath: fileOutPath
+		};
+		mail.sendEmail(parameters)
+		.then(info => {
+			console.log(info);
+		})
+		.catch(err => {
+			console.log(err);
+		});
 	});
 }
 

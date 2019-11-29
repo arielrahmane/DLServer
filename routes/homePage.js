@@ -33,17 +33,22 @@ module.exports = app => {
 	app.post('/emailData', (req, res) => {
 		var service = req.body.service;
 		var user = req.body.user;
-		var pass = req.body.pass;
 		var from = req.body.from;
 		var to = req.body.to;
 		routines.csv((fileOut, fileOutPath) => {
-			mail.sendEmail(service, user, pass, from, to, fileOut, fileOutPath)
+			var parameters = {
+				service: service,
+				to: to,
+				fileName: fileOut,
+				filePath: fileOutPath
+			};
+			mail.sendEmail(parameters)
 			.then(info => {
 				res.status(200).send({message: info});
 			})
 			.catch(err => {
 				res.status(400).send({message: err});
-			})
+			});
 		});
 	});
 };

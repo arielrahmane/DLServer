@@ -1,24 +1,42 @@
 const nodemailer = require ('nodemailer');
+const { google } = require("googleapis");
+const { credentials } = require("../config/credentials");
+const OAuth2 = google.auth.OAuth2;
 
-function sendEmail(service, user, pass, from, to, fileName, filePath) {
+const oauth2Client = new OAuth2(
+    credentials.client_id, // ClientID
+    credentials.client_secret, // Client Secret
+    credentials.redirect_URL // Redirect URL
+);
+
+oauth2Client.setCredentials({
+    refresh_token: credentials.refresh_token
+});
+const accessToken = oauth2Client.getAccessToken();
+
+function sendEmail(parameters) {
     return new Promise(function(resolve, reject) {
         var transporter = nodemailer.createTransport({
-            service: service,
+            service: parameters.service,
             auth: {
-                   user: user, //need to address security problems first
-                   pass: pass
-               }
+                type: "OAuth2",
+                user: credentials.client_user, 
+                clientId: credentials.client_id,
+                clientSecret: credentials.client_secret,
+                refreshToken: credentials.refresh_token,
+                accessToken: accessToken
+           }
         });
     
         const mailOptions = {
-            from: from, // sender address
-            to: to, // list of receivers
+            from: credentials.client_user, // sender address
+            to: parameters.to, // list of receivers
             subject: 'OpenDL Data Excel', // Subject line
             html: '<p>Adjunto se encuentra el archivo Excel con los datos de todos los nodos.</p>', // plain text body
             attachments: [
                 {
-                    filename: fileName,
-                    path: filePath // stream this file
+                    filename: parameters.fileName,
+                    path: parameters.filePath // stream this file
                 }
             ]
           };
