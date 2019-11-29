@@ -2,8 +2,11 @@
 
 const CronJob = require('cron').CronJob;
 const moment = require('moment');
+const XLSX = require('xlsx');
+const _ = require('lodash');
 const DB = require('../src/database');
 const dbStorage = require('./DBstorage');
+const mail = require('./mail');
 
 //Rutine every hour
 /*
@@ -62,6 +65,81 @@ const monthlyJob = new CronJob('0 0 0 1 * *', function() {
 
 	beginJob(datetime1, datetime2, dbStorage.getNodeDailyAv, dbStorage.addNodeMonthlyAv);
 });
+
+/*
+	Format of the output from the DB request:
+	[
+		NodesData: {
+			dataValues: {
+				id: Integer,
+				tempA: float,
+				tempB: float,
+				tempC: float,
+				humidA: float,
+				humidB: float,
+				humidC: float,
+				alcohol: float,
+				createdAt: Date, -----> (YYYY-MM-DD HH:mm:ss)
+				updatedAt: Date  -----> (YYYY-MM-DD HH:mm:ss)
+			}
+		}
+	]
+ */
+
+async function csv(callback) {
+	var wb = XLSX.utils.book_new();
+	wb.Props = {
+		Title: "Data Nodos",
+		Subject: "Data Nodos",
+		Author: "OpenDL",
+		CreatedDate: moment()
+	};
+	var fileOut = 'data_nodos.xlsx';
+	var fileOutPath = '/home/pi/Documents/DLServer/' + fileOut;
+	const fields = ['id', 'nodeID', 
+					'tempA', 'tempB', 'tempC', 
+					'humidA', 'humidB', 'humidC', 
+					'alcohol', 'createdAt', 'updatedAt'];
+	for (var node=0; node<16; node++) {
+		var finished = false;
+		var currentSheet = "Nodo " + String(node);
+		wb.SheetNames.push(currentSheet);
+		//wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet([{}], {header: fields});
+		var fromID = 0;
+		var toID = 499;
+		var firstNodeIteration = true;
+		while(!finished) {
+			await dbStorage.getNodeDataForCSV(fromID, toID, node)
+			.then(dataSet => {
+				console.log("Got the dataSet of node " + node + " with length = " + dataSet.length);
+				if (_.isEmpty(dataSet)) finished = true;
+				else {
+					var jsonArray = [];
+					for (var i=0; i<dataSet.length; i++) {
+						var idata = dataSet[i].dataValues;
+						jsonArray.push(idata);
+					};
+					console.log("AGREGANDO DATA DE: " + jsonArray.length);
+					if (firstNodeIteration) {
+						wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
+						firstNodeIteration = false;
+					} else {
+						XLSX.utils.sheet_add_json(wb.Sheets[currentSheet], jsonArray, {origin: -1, skipHeader: true});
+					}
+				}
+			})
+			.catch(err => {
+				console.log(err);
+			})
+			fromID = fromID + 500;
+			toID = toID + 500;
+		};
+	};
+	console.log("Agregando a archivo...");
+	XLSX.writeFileAsync(fileOut, wb, () => {
+		callback(fileOut, fileOutPath);
+	});
+}
 
 function fakeDB() { 
 	var currentDate = moment().subtract(1, "days");
@@ -195,5 +273,6 @@ module.exports = {
     hourJob,
     dailyJob,
 	monthlyJob,
-	fakeDB
+	fakeDB,
+	csv
 }

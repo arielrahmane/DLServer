@@ -36,14 +36,11 @@ Engine.engine();
  });*/
 
 //InternetAv.onlineCheck(InternetAv.startTunnel, true);
-InternetAv.startTunnel();
+//InternetAv.startTunnel();
 
 routines.hourJob.start();
 routines.dailyJob.start();
 routines.monthlyJob.start();
 
-/*setTimeout(() => {
-	routines.fakeDB();
-}, 20000);*/
 
 module.exports = app;
