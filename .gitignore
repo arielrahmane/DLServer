@@ -62,3 +62,6 @@ typings/
 
 #Secret
 config/credentials.js
+
+#files
+data_nodos.xlsx

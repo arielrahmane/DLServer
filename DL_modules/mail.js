@@ -14,10 +14,17 @@ oauth2Client.setCredentials({
 });
 const accessToken = oauth2Client.getAccessToken();
 
+/*
+    parameters = {
+        to: String, //email destination
+        fileName: String, //Name of the attached file
+        filePath: String //Path to attached file
+    }
+ */
 function sendEmail(parameters) {
     return new Promise(function(resolve, reject) {
         var transporter = nodemailer.createTransport({
-            service: parameters.service,
+            service: "gmail",
             auth: {
                 type: "OAuth2",
                 user: credentials.client_user, 

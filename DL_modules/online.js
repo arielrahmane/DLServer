@@ -58,8 +58,8 @@ function onlineCheck(callback, retry) {
 function startTunnel() {
     DBStorage.getSystem().then(system => {
         var ltSubdomain = system.ltSubdomain;
-        initTunnel(ltSubdomain, 0);
-        //initTunnel2(ltSubdomain, 0);
+        //initTunnel(ltSubdomain, 0);
+        initTunnel2(ltSubdomain, 0);
     })
 }
 

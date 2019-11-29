@@ -31,13 +31,9 @@ module.exports = app => {
 	}),
 	
 	app.post('/emailData', (req, res) => {
-		var service = req.body.service;
-		var user = req.body.user;
-		var from = req.body.from;
 		var to = req.body.to;
 		routines.csv((fileOut, fileOutPath) => {
 			var parameters = {
-				service: service,
 				to: to,
 				fileName: fileOut,
 				filePath: fileOutPath
