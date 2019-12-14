@@ -96,8 +96,8 @@ async function initTunnel(ltSubdomain, retryNumb) {
 
 async function initTunnel2(ngrokSubdomain, retryNumb) {
     await ngrok.connect({
-        //authToken: '3vYHu3E5ZAs9H8Rvn54Ds_56iMs9fZwAmJczSMw8fqH',
-        //subdomain: 'opendl',
+        configPath: '/home/pi/.ngrok2/ngrok.yml',
+        subdomain: 'opendl',
         addr: 8081,
         onStatusChange: status => {console.log(status);}
     }).then(done => {
