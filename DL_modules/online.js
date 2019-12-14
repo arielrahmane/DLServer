@@ -58,8 +58,8 @@ function onlineCheck(callback, retry) {
 function startTunnel() {
     DBStorage.getSystem().then(system => {
         var ltSubdomain = system.ltSubdomain;
-        initTunnel(ltSubdomain, 0);
-        //initTunnel2(ltSubdomain, 0);
+        //initTunnel(ltSubdomain, 0);
+        initTunnel2(ltSubdomain, 0);
     })
 }
 
@@ -96,6 +96,8 @@ async function initTunnel(ltSubdomain, retryNumb) {
 
 async function initTunnel2(ngrokSubdomain, retryNumb) {
     await ngrok.connect({
+        //authToken: '3vYHu3E5ZAs9H8Rvn54Ds_56iMs9fZwAmJczSMw8fqH',
+        //subdomain: 'opendl',
         addr: 8081,
         onStatusChange: status => {console.log(status);}
     }).then(done => {
