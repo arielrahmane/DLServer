@@ -47,7 +47,17 @@ module.exports = {
 		}
 	},
 	getActiveNodes: function() {
+		/*DBstorage.getActiveNodes()
+		.then(nodes => {
+			//console.log("ESTOS SON LOS NODOS ACTIVOS:\n" + nodes);
+		})
+		.catch(err => {
+			//console.log(err);
+		})*/
 		return activeNodes;
+	},
+	resetActiveNodes: function() {
+		activeNodes = [];
 	},
 	setCurrentID: function(val) {
 		currentID = val;
