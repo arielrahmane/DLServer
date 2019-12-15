@@ -5,7 +5,7 @@ const { exec } = require('child_process');
 const FLAG = require('../engine/modules/flags');
 const DBStorage = require('./DBstorage');
 
-var command = "sudo wifi-connect -s OpenDL -p arielraspi";
+var command = "sudo wifi-connect -s OpenDL -p opendl5555";
 
 function startWAP() {
     return new Promise(function (resolve, reject) {
