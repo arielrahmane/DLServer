@@ -7,6 +7,7 @@ const Sequelize = require('sequelize');
 const NodeStatusModel = require("../models/nodeStatus");
 const InternetAv = require("../DL_modules/online");
 const routines = require("../DL_modules/routines");
+const mail = require('../DL_modules/mail');
 // const WAP = require('../DL_modules/wap');
 
 const app = express()
@@ -36,7 +37,7 @@ Engine.engine();
  });*/
 
 //InternetAv.onlineCheck(InternetAv.startTunnel, true);
-//InternetAv.startTunnel();
+InternetAv.startTunnel();
 
 routines.hourJob.start();
 routines.dailyJob.start();

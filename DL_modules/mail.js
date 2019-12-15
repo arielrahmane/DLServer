@@ -39,7 +39,7 @@ function sendEmail(parameters) {
             from: credentials.client_user, // sender address
             to: parameters.to, // list of receivers
             subject: 'OpenDL Data Excel', // Subject line
-            html: '<p>Adjunto se encuentra el archivo Excel con los datos de todos los nodos.</p>', // plain text body
+            html: '<p>Adjunto se encuentra el archivo Excel con los datos del nodo seleccionado.</p>', // plain text body
             attachments: [
                 {
                     filename: parameters.fileName,

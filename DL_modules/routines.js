@@ -141,6 +141,59 @@ async function csv(callback) {
 	});
 }
 
+async function csvNode(node, callback) {
+	var wb = XLSX.utils.book_new();
+	wb.Props = {
+		Title: "Data Nodo",
+		Subject: "Data Nodo",
+		Author: "OpenDL",
+		CreatedDate: moment()
+	};
+	var fileOut = 'data_nodo.xlsx';
+	var fileOutPath = '/home/pi/Documents/DLServer/' + fileOut;
+	const fields = ['id', 'nodeID', 
+					'tempA', 'tempB', 'tempC', 
+					'humidA', 'humidB', 'humidC', 
+					'alcohol', 'createdAt', 'updatedAt'];
+	var finished = false;
+	var currentSheet = "Nodo " + String(node);
+	wb.SheetNames.push(currentSheet);
+	//wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet([{}], {header: fields});
+	var fromID = 0;
+	var toID = 499;
+	var firstNodeIteration = true;
+	while(!finished) {
+		await dbStorage.getNodeDataForCSV(fromID, toID, node)
+		.then(dataSet => {
+			console.log("Got the dataSet of node " + node + " with length = " + dataSet.length);
+			if (_.isEmpty(dataSet)) finished = true;
+			else {
+				var jsonArray = [];
+				for (var i=0; i<dataSet.length; i++) {
+					var idata = dataSet[i].dataValues;
+					jsonArray.push(idata);
+				};
+				console.log("AGREGANDO DATA DE: " + jsonArray.length);
+				if (firstNodeIteration) {
+					wb.Sheets[currentSheet] = XLSX.utils.json_to_sheet(jsonArray, {header: fields});
+					firstNodeIteration = false;
+				} else {
+					XLSX.utils.sheet_add_json(wb.Sheets[currentSheet], jsonArray, {origin: -1, skipHeader: true});
+				}
+			}
+		})
+		.catch(err => {
+			console.log(err);
+		})
+		fromID = fromID + 500;
+		toID = toID + 500;
+	};
+	console.log("Agregando a archivo...");
+	XLSX.writeFileAsync(fileOut, wb, () => {
+		callback(fileOut, fileOutPath);
+	});
+}
+
 function fakeDB() { 
 	var currentDate = moment().subtract(1, "days");
 	var passedDate = moment().subtract(3, "years");
@@ -274,5 +327,6 @@ module.exports = {
     dailyJob,
 	monthlyJob,
 	fakeDB,
-	csv
+	csv,
+	csvNode
 }

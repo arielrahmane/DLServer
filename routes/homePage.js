@@ -47,4 +47,23 @@ module.exports = app => {
 			});
 		});
 	});
+
+	app.post('/emailNode', (req, res) => {
+		var to = req.body.to;
+		var node = req.body.node;
+		routines.csvNode(node, (fileOut, fileOutPath) => {
+			var parameters = {
+				to: to,
+				fileName: fileOut,
+				filePath: fileOutPath
+			};
+			mail.sendEmail(parameters)
+			.then(info => {
+				res.status(200).send({message: info});
+			})
+			.catch(err => {
+				res.status(400).send({message: err});
+			});
+		});
+	});
 };
