@@ -35,6 +35,7 @@ function onlineCheck(callback, retry) {
     return new Promise(function (resolve, reject) {
         isOnline().then( (online) => {
             if(online) {
+                console.log(online);
                 console.log("Device is online");
                 resolve(true);
                 callback();
@@ -57,16 +58,20 @@ function onlineCheck(callback, retry) {
 
 function startTunnel() {
     DBStorage.getSystem().then(system => {
-        var ltSubdomain = system.ltSubdomain;
+        var subdomain = system.ltSubdomain;
         //initTunnel(ltSubdomain, 0);
-        initTunnel2(ltSubdomain, 0);
+        initTunnel2(subdomain, 0);
     })
 }
 
 function retryTunnel(retryNumb) {
+    if (retryNumb > 3) {
+        console.log('Intentos máximos superados');
+        return;
+    }
     DBStorage.getSystem().then(system => {
-        var ltSubdomain = system.ltSubdomain + retryNumb.toString();
-        initTunnel(ltSubdomain, retryNumb);
+        var ltSubdomain = system.ltSubdomain;
+        initTunnel2(ltSubdomain, retryNumb);
     })
 }
 
@@ -96,16 +101,18 @@ async function initTunnel(ltSubdomain, retryNumb) {
 
 async function initTunnel2(ngrokSubdomain, retryNumb) {
     await ngrok.connect({
-        //authToken: '3vYHu3E5ZAs9H8Rvn54Ds_56iMs9fZwAmJczSMw8fqH',
-        //subdomain: 'opendl',
+        configPath: '/home/pi/.ngrok2/ngrok.yml',
+        subdomain: ngrokSubdomain,
         addr: 8081,
-        onStatusChange: status => {console.log(status);}
+        onStatusChange: status => { 
+            console.log(status);
+        }
     }).then(done => {
         console.log(done);
         FLAG.setTunnel(done);
         FLAG.setTunnelService("ngrok");
     }).catch(err => {
-        console.log(err)
+        console.log(err);
     });
 }
 
@@ -115,7 +122,8 @@ function closeTunnel(service) {
             FLAG.getTunnel().close();
             break;
         case "ngrok":
-            ngrok.disconnect(FLAG.getTunnel())
+            //ngrok.disconnect('https://opendl.ngrok.io')
+            ngrok.kill()
             .then(() => {console.log("Ngrok service disconnected.");})
             .catch(() => {console.log("Error in disconnecting ngrok service.");});
             break;
