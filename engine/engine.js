@@ -24,29 +24,6 @@ function readFile()
   MIXINS.separator();
 }
 
-function init()
-{
-  FLAG.setInitialStage(true);
-  var nodeID = 0;
-  FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
-  DBstorage.createNodeStatus();
-  askNode = setInterval(gatherActiveNodes, 1000);
-  function gatherActiveNodes()
-  {
-    NM.setCurrentID(nodeID);
-    console.log(NM.getCurrentID());
-    COM.send(nodeID);
-    nodeID++;
-    if (nodeID > CONFIG.numberOfNodes_-1) 
-    {
-      clearInterval(askNode);
-      FLAG.setInitialStage(false);
-      setInterval(SR.readSensors, 10000);
-      NM.setCurrentID(NM.getActiveNodes()[0]);
-    }
-  }
-}
-
 let askNode;
 var nodeID = 0;
 
@@ -54,18 +31,14 @@ module.exports.startNodesScan = function(callback) {
   FLAG.setInitialStage(true);
   FLAG.setDeviceScanning(true);
   AnalogCtl.scanningLed(true);
-  FM.writeFile("activeNodes.txt", "", 'w'); // Vaciamos el archivo de nodos activos
   DBstorage.createNodeStatus();
+  NM.resetActiveNodes();
   askNode = setInterval(gatherActiveNodes, 1000, callback);
 }
 
 function gatherActiveNodes(callback)
   {
-    NM.setCurrentID(nodeID);
-    console.log(NM.getCurrentID());
-    COM.send(nodeID);
-    nodeID++;
-    if (nodeID > CONFIG.numberOfNodes_-1) 
+    if (nodeID > CONFIG.numberOfNodes_-1)
     {
       clearInterval(askNode);
       FLAG.setInitialStage(false);
@@ -74,7 +47,13 @@ function gatherActiveNodes(callback)
       AnalogCtl.scanningLed(false);
       NM.setCurrentID(NM.getActiveNodes()[0]);
       callback();
+    } 
+    else {   
+      NM.setCurrentID(nodeID);
+      console.log(NM.getCurrentID());
+      COM.send(nodeID);
     }
+    nodeID++;
   }
 
   //aborted is a boolean for stating if the function was called because of aborting the scan 

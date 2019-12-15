@@ -21,6 +21,22 @@ function updateNodeStatus(node, status) {
 	);
 }
 
+function getActiveNodes() {
+	return new Promise(function(resolve, reject) {
+		DB.NodeStatus.findAll({ 
+			where: {
+				active: true
+			}
+		})
+		.then(nodes => {
+			resolve(nodes);
+		})
+		.catch(err => {
+			reject(err);
+		});
+	});
+}
+
 function createSettingsOnce() {
 	console.log('CREATING SETTINGS ROW!');
 	DB.Settings.create({
@@ -328,6 +344,7 @@ function getVariableSpan(database, node, variable, fromDate, toDate) {
 module.exports = {
 	createNodeStatus,
 	updateNodeStatus,
+	getActiveNodes,
 	addNodeData,
 	updateSettings,
 	createSettingsOnce,
