@@ -1,2 +1,5 @@
 # DLServer
-This is a server made in a Raspberry Pi 3 using Express JS. It only works for a local network, with the raspi configured as a WAP. The server collects data from a Data Logger and stores it in a database.
+
+DLServer is the server side of OpenDL. Its main function is to work as a web server, making possible the remote connection with the DLClient and storing all the relevant data in its database. 
+
+Furthermore, the server is in charge of dealing with every task related to the mere functionality of the data logger itself, encapsuled in a module called "Engine".

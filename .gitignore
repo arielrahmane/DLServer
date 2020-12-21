@@ -59,3 +59,10 @@ typings/
 
 # next.js build output
 .next
+
+#Secret
+config/credentials.js
+
+#files
+data_nodos.xlsx
+data_nodo.xlsx
