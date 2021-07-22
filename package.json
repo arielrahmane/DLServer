@@ -42,6 +42,6 @@
     "raspi-serial": "^5.1.2",
     "sequelize": "^5.19.6",
     "serialport": "^7.1.5",
-    "xlsx": "^0.15.2"
+    "xlsx": "^0.17.0"
   }
 }
